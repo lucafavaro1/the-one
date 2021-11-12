@@ -1,0 +1,30 @@
+Scenario.name = MyScenario
+# duration of the simulation
+Scenario.endTime = 600
+# 1 update of the position on every 0.1 second
+Scenario.updateInterval = 0.1
+Scenario.simulateConnections = true
+Scenario.nrofHostGroups = 0
+# size of the world in case you don't load a map
+MovementModel.worldSize = 1000,1000
+Report.nrofReports = 0
+Events.nrof = 0
+
+# number of groups (made of nodes)
+Scenario.nrofHostGroups = 1
+# ID of the specific group
+Group1.groupID = x
+# number of hosts in the specific group
+Group1.nrofHosts = 10
+# number of interfaces (if 0 nodes can't communicate)
+Group1.nrofInterfaces = 0
+# mobility model assigned to the nodes of the group
+Group1.movementModel = RandomWaypoint
+Group1.router = PassiveRouter
+
+Group1.nrofInterfaces = 1
+Group1.interface1 = myInterface
+# type of transmission
+myInterface.type = SimpleBroadcastInterface
+myInterface.transmitRange = 50
+myInterface.transmitSpeed = 0
