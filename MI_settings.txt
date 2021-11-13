@@ -1,10 +1,10 @@
 #Setting our personal scenario
 
-Scenario.name = MIVirusSpread
+Scenario.name = MIScenario
 Scenario.endTime = 6000
 Scenario.updateInterval = 2
 Scenario.simulateConnections = false
-MovementModel.worldSize = 1000,1000
+MovementModel.worldSize = 3000,3000
 Events.nrof = 0
 
 # Communication Interface
@@ -16,7 +16,7 @@ myInterface.transmitSpeed = 0
 Scenario.nrofHostGroups = 1
 
 Group1.groupID = x
-Group1.nrofHosts = 150
+Group1.nrofHosts = 10
 Group1.nrofInterfaces = 1
 Group1.interface1 = myInterface
 Group1.movementModel = MIRouteMovement
@@ -25,17 +25,18 @@ Group1.movementModel = MIRouteMovement
 Group1.router = PassiveRouter
 
 ## Map based movement -movement model specific settings
+# in case we want to do a map based model
 # MapBasedMovement.nrofMapFiles = 1
 # MapBasedMovement.mapFile1 = data/example/poligoni.wkt
 
-## GUI settings
+## GUI settings (adjust the map image on the node movement)
 
 # GUI underlay image settings
-GUI.UnderlayImage.fileName = data/exampleMap.png
+GUI.UnderlayImage.fileName = data/example/map.PNG
 # Image offset in pixels (x, y)
-GUI.UnderlayImage.offset = 0, 210
+GUI.UnderlayImage.offset = -50, -50
 # Scaling factor for the image
-GUI.UnderlayImage.scale = 1.4
+GUI.UnderlayImage.scale = 5.1
 # Image rotation (radians)
 GUI.UnderlayImage.rotate = 0
 

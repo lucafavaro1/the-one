@@ -21,7 +21,8 @@ public class Coord implements Cloneable, Comparable<Coord> {
 		setLocation(x,y);
 	}
 
-	/**
+
+    /**
 	 * Sets the location of this coordinate object
 	 * @param x The x coordinate to set
 	 * @param y The y coordinate to set
