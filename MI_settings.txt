@@ -1,16 +1,24 @@
-#Setting our personal scenario
+#Settings of our personal scenario
 
-Scenario.name = MIScenario
-Scenario.endTime = 6000
-Scenario.updateInterval = 2
-Scenario.simulateConnections = false
+Scenario.name = MI_Wifi_Scenario
+Scenario.endTime = 43200
+#43200s == 12h (from 8am to 8pm)
+Scenario.updateInterval = 1
+Scenario.simulateConnections = true
 MovementModel.worldSize = 3000,3000
 Events.nrof = 0
 
 # Communication Interface
 myInterface.type = SimpleBroadcastInterface
-myInterface.transmitRange = 0
-myInterface.transmitSpeed = 0
+myInterface.transmitRange = 10
+myInterface.transmitSpeed = 10M
+
+# Common settings for all groups
+Group.bufferSize = 5M
+Group.waitTime = 0, 120
+Group.nrofInterfaces = 1
+# Walking speeds
+Group.speed = 0.5, 1.5
 
 # Groups
 Scenario.nrofHostGroups = 1
@@ -20,23 +28,27 @@ Group1.nrofHosts = 10
 Group1.nrofInterfaces = 1
 Group1.interface1 = myInterface
 Group1.movementModel = MIRouteMovement
-# Group1.routeFile = data/example/poligoni.wkt
-# Group1.routeType = 1
-Group1.router = PassiveRouter
+# were you want to locate the nodes at the beginning of the simulation, remove it to have it random
+# roup1.routeFirstStop = 0
+Group1.routeFile = data/example/paths_inside.wkt
+Group1.routeType = 1
+Group1.rwpActivePeriod = 0, 3000
+Group1.router = EpidemicRouter
 
 ## Map based movement -movement model specific settings
 # in case we want to do a map based model
-# MapBasedMovement.nrofMapFiles = 1
-# MapBasedMovement.mapFile1 = data/example/poligoni.wkt
+MovementModel.warmup = 1000
+MapBasedMovement.nrofMapFiles = 1
+MapBasedMovement.mapFile1 = data/example/paths_inside.wkt
 
 ## GUI settings (adjust the map image on the node movement)
 
 # GUI underlay image settings
 GUI.UnderlayImage.fileName = data/example/map.PNG
 # Image offset in pixels (x, y)
-GUI.UnderlayImage.offset = -50, -50
+GUI.UnderlayImage.offset = -55, -235
 # Scaling factor for the image
-GUI.UnderlayImage.scale = 5.1
+GUI.UnderlayImage.scale = 1
 # Image rotation (radians)
 GUI.UnderlayImage.rotate = 0
 
