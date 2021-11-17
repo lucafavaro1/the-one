@@ -30,16 +30,18 @@ Group1.interface1 = myInterface
 Group1.movementModel = MIRouteMovement
 # were you want to locate the nodes at the beginning of the simulation, remove it to have it random
 # roup1.routeFirstStop = 0
-Group1.routeFile = data/example/paths_inside.wkt
+Group1.routeFile = data/example/magistrale_path.wkt
 Group1.routeType = 1
-Group1.rwpActivePeriod = 0, 3000
+Group1.rwpActivePeriod = 0, 43000
 Group1.router = EpidemicRouter
 
 ## Map based movement -movement model specific settings
 # in case we want to do a map based model
 MovementModel.warmup = 1000
-MapBasedMovement.nrofMapFiles = 1
+MapBasedMovement.nrofMapFiles = 2
 MapBasedMovement.mapFile1 = data/example/paths_inside.wkt
+MapBasedMovement.mapFile2 = data/example/magistrale_path.wkt
+#MapBasedMovement.mapFile3 = data/example/entrance_path.wkt
 
 ## GUI settings (adjust the map image on the node movement)
 
