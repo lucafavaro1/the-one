@@ -27,6 +27,7 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /** Per node group setting used for selecting a route file ({@value}) */
     public static final String ROUTE_FILE_S = "routeFile";
+
     /**
      * Per node group setting used for selecting a route's type ({@value}).
      * Integer value from {@link MapRoute} class.
@@ -54,8 +55,10 @@ public class MIRouteMovement extends MapBasedMovement implements
     private MapRoute route;
 
     // adding the activity period feature in the MapRouteMovement
-    private final double activeStart;
-    private final double activeEnd;
+    private final double activeStart1;
+    private final double activeEnd1;
+    private final double activeStart2;
+    private final double activeEnd2;
 
     //==========================================================================//
     // Implementation - activity periods
@@ -63,15 +66,18 @@ public class MIRouteMovement extends MapBasedMovement implements
     @Override
     public boolean isActive() {
         final double curTime = SimClock.getTime();
-        return ( curTime >= this.activeStart ) && ( curTime <= this.activeEnd );
+        return (( curTime >= this.activeStart1 ) && ( curTime <= this.activeEnd1 )) ||
+                (( curTime >= this.activeStart2 ) && ( curTime <= this.activeEnd2 ));
     }
 
     @Override
     public double nextPathAvailable() {
         final double curTime = SimClock.getTime();
-        if ( curTime < this.activeStart ) {
-            return this.activeStart;
-        } else if ( curTime > this.activeEnd ) {
+        if ( curTime < this.activeStart1 ) {
+            return this.activeStart1;
+        } else if (curTime > activeEnd1 && curTime < this.activeStart2) {
+            return this.activeStart2;
+        } else if ( curTime > this.activeEnd2) {
             return Double.MAX_VALUE;
         }
         return curTime;
@@ -103,9 +109,11 @@ public class MIRouteMovement extends MapBasedMovement implements
         }
 
         // adding the activity period feature in the MapRouteMovement
-        final double[] active = settings.getCsvDoubles( ACTIVE_SETTING ,2 );
-        this.activeStart = active[ 0 ];
-        this.activeEnd = active[ 1 ];
+        final double[] active = settings.getCsvDoubles( ACTIVE_SETTING ,4 );
+        this.activeStart1 = active[0];
+        this.activeEnd1 = active[1];
+        this.activeStart2 = active [2];
+        this.activeEnd2 = active[3];
     }
 
     /**
@@ -118,8 +126,10 @@ public class MIRouteMovement extends MapBasedMovement implements
         this.route = proto.allRoutes.get(proto.nextRouteIndex).replicate();
         this.firstStopIndex = proto.firstStopIndex;
         // adding the activity period feature in the MapRouteMovement
-        this.activeStart = proto.activeStart;
-        this.activeEnd = proto.activeEnd;
+        this.activeStart1 = proto.activeStart1;
+        this.activeEnd1 = proto.activeEnd1;
+        this.activeStart2 = proto.activeStart2;
+        this.activeEnd2 = proto.activeEnd2;
 
         if (firstStopIndex < 0) {
             /* set a random starting position on the route */
@@ -140,8 +150,9 @@ public class MIRouteMovement extends MapBasedMovement implements
     @Override
     public Path getPath() {
         Path p = new Path(generateSpeed());
-        MapNode to = route.nextStop();
+        //final double curTime = SimClock.getTime();
 
+        MapNode to = route.nextStop();
         List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 
         // this assertion should never fire if the map is checked in read phase

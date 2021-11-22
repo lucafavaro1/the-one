@@ -8,40 +8,103 @@ Scenario.simulateConnections = true
 MovementModel.worldSize = 3000,3000
 Events.nrof = 0
 
-# Communication Interface
-myInterface.type = SimpleBroadcastInterface
-myInterface.transmitRange = 10
-myInterface.transmitSpeed = 10M
+# Communication Interface for nodes
+nodesInterface.type = SimpleBroadcastInterface
+nodesInterface.transmitRange = 50
+nodesInterface.transmitSpeed = 10M
+
+# Communication Interface for accessPoints
+APInterface.type = SimpleBroadcastInterface
+APInterface.transmitRange = 100
+APInterface.transmitSpeed = 1000M
+
 
 # Common settings for all groups
 Group.bufferSize = 5M
 Group.waitTime = 0, 120
-Group.nrofInterfaces = 1
+
 # Walking speeds
-Group.speed = 0.5, 1.5
+Group.speed = 1, 1
 
 # Groups
-Scenario.nrofHostGroups = 1
+Scenario.nrofHostGroups = 7
+Group.nrofHosts = 10
+Group.nrofInterfaces = 1
+Group.interface1 = nodesInterface
+Group.movementModel = MIRouteMovement
+Group.router = EpidemicRouter
 
-Group1.groupID = x
-Group1.nrofHosts = 10
-Group1.nrofInterfaces = 1
-Group1.interface1 = myInterface
-Group1.movementModel = MIRouteMovement
-# were you want to locate the nodes at the beginning of the simulation, remove it to have it random
-# roup1.routeFirstStop = 0
-Group1.routeFile = data/example/magistrale_path.wkt
+Group1.groupID = rechnerhalle
+Group1.routeFile = data/example/rechnerhalleN.wkt
 Group1.routeType = 1
-Group1.rwpActivePeriod = 0, 43000
-Group1.router = EpidemicRouter
+Group1.routeFirstStop = 0
+Group1.rwpActivePeriod = 0, 490, 4000, 4490
+
+Group2.groupID = tutorial1
+Group2.routeFile = data/example/tutorial1N.wkt
+Group2.routeType = 1
+Group2.routeFirstStop = 0
+Group2.rwpActivePeriod = 0, 940, 4000, 4940
+
+Group3.groupID = tutorial2
+Group3.routeFile = data/example/tutorial2N.wkt
+Group3.routeType = 1
+Group3.routeFirstStop = 0
+Group3.rwpActivePeriod = 0, 1200, 4000, 5200
+
+Group4.groupID = tutorial3
+Group4.routeFile = data/example/tutorial1W.wkt
+Group4.routeType = 1
+Group4.routeFirstStop = 0
+Group4.rwpActivePeriod = 0, 1455, 4000, 5455
+
+Group5.groupID = WIFI_0
+Group5.movementModel = StaticRouter
+Group5.rwpActivePeriod = 0, 0
+Group5.coord = 1125, 70
+Group5.interface1 = APInterface
+Group5.nrofHosts = 1
+
+Group6.groupID = WIFI_1
+Group6.movementModel = StaticRouter
+Group6.rwpActivePeriod = 0, 0
+Group6.coord = 945, 25
+Group6.interface1 = APInterface
+Group6.nrofHosts = 1
+
+Group7.groupID = WIFI_2
+Group7.movementModel = StaticRouter
+Group7.rwpActivePeriod = 0, 0
+Group7.coord = 750, 75
+Group7.interface1 = APInterface
+Group7.nrofHosts = 1
 
 ## Map based movement -movement model specific settings
 # in case we want to do a map based model
-MovementModel.warmup = 1000
-MapBasedMovement.nrofMapFiles = 2
-MapBasedMovement.mapFile1 = data/example/paths_inside.wkt
-MapBasedMovement.mapFile2 = data/example/magistrale_path.wkt
-#MapBasedMovement.mapFile3 = data/example/entrance_path.wkt
+#MovementModel.warmup = 1000
+MapBasedMovement.nrofMapFiles = 14
+MapBasedMovement.mapFile1 = data/example/rechnerhalleN.wkt
+MapBasedMovement.mapFile2 = data/example/paths_inside.wkt
+MapBasedMovement.mapFile3 = data/example/tutorial1N.wkt
+MapBasedMovement.mapFile4 = data/example/tutorial2N.wkt
+MapBasedMovement.mapFile5 = data/example/tutorial3N.wkt
+MapBasedMovement.mapFile6 = data/example/libraryN.wkt
+MapBasedMovement.mapFile7 = data/example/cafeteriaN.wkt
+MapBasedMovement.mapFile8 = data/example/HS3_N.wkt
+MapBasedMovement.mapFile9 = data/example/HS2_N.wkt
+MapBasedMovement.mapFile10 = data/example/HS1_N.wkt
+MapBasedMovement.mapFile11 = data/example/tutorial3W.wkt
+MapBasedMovement.mapFile12 = data/example/libraryW.wkt
+MapBasedMovement.mapFile13 = data/example/tutorial2W.wkt
+MapBasedMovement.mapFile14 = data/example/tutorial1W.wkt
+
+
+
+
+
+
+
+
 
 ## GUI settings (adjust the map image on the node movement)
 
