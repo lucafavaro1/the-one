@@ -34,8 +34,8 @@ Group.interface1 = nodesInterface
 Group.movementModel = MIRouteMovement
 Group.router = EpidemicRouter
 
-Group1.groupID = rechnerhalle
-Group1.routeFile = data/example/rechnerhalleN.wkt
+Group1.groupID = computerlabN
+Group1.routeFile = data/example/computerlabN.wkt
 Group1.routeType = 1
 Group1.routeFirstStop = 0
 Group1.rwpActivePeriod = 0, 490, 4000, 4490
@@ -53,7 +53,7 @@ Group3.routeFirstStop = 0
 Group3.rwpActivePeriod = 0, 1200, 4000, 5200
 
 Group4.groupID = tutorial3
-Group4.routeFile = data/example/tutorial1W.wkt
+Group4.routeFile = data/example/HS1_W.wkt
 Group4.routeType = 1
 Group4.routeFirstStop = 0
 Group4.rwpActivePeriod = 0, 1455, 4000, 5455
@@ -82,8 +82,8 @@ Group7.nrofHosts = 1
 ## Map based movement -movement model specific settings
 # in case we want to do a map based model
 #MovementModel.warmup = 1000
-MapBasedMovement.nrofMapFiles = 14
-MapBasedMovement.mapFile1 = data/example/rechnerhalleN.wkt
+MapBasedMovement.nrofMapFiles = 21
+MapBasedMovement.mapFile1 = data/example/computerlabN.wkt
 MapBasedMovement.mapFile2 = data/example/paths_inside.wkt
 MapBasedMovement.mapFile3 = data/example/tutorial1N.wkt
 MapBasedMovement.mapFile4 = data/example/tutorial2N.wkt
@@ -97,6 +97,17 @@ MapBasedMovement.mapFile11 = data/example/tutorial3W.wkt
 MapBasedMovement.mapFile12 = data/example/libraryW.wkt
 MapBasedMovement.mapFile13 = data/example/tutorial2W.wkt
 MapBasedMovement.mapFile14 = data/example/tutorial1W.wkt
+MapBasedMovement.mapFile15 = data/example/cafeteriaW.wkt
+MapBasedMovement.mapFile16 = data/example/tutorial4N.wkt
+MapBasedMovement.mapFile17 = data/example/tutorial4W.wkt
+MapBasedMovement.mapFile18 = data/example/computerlabW.wkt
+MapBasedMovement.mapFile19 = data/example/HS3_W.wkt
+MapBasedMovement.mapFile20 = data/example/HS2_W.wkt
+MapBasedMovement.mapFile21 = data/example/HS1_W.wkt
+
+
+
+
 
 
 
