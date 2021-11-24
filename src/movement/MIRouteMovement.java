@@ -13,6 +13,7 @@ import movement.map.MapNode;
 import movement.map.MapRoute;
 import core.Coord;
 import core.Settings;
+import movement.map.SimMap;
 
 /**
  * Map based movement model that uses predetermined paths within the map area.
@@ -54,6 +55,10 @@ public class MIRouteMovement extends MapBasedMovement implements
     /** Route of the movement model's instance */
     private MapRoute route;
 
+    // attributes to define starting and ending point
+    private Coord lastWaypoint;
+    private Coord destination;
+
     // adding the activity period feature in the MapRouteMovement
     private final double activeStart1;
     private final double activeEnd1;
@@ -93,6 +98,9 @@ public class MIRouteMovement extends MapBasedMovement implements
         int type = settings.getInt(ROUTE_TYPE_S);
         allRoutes = MapRoute.readRoutes(fileName, type, getMap());
         nextRouteIndex = 0;
+        // definition of the destination
+        destination = allRoutes.get(0).getStops().get(allRoutes.get(0).getNrofStops()-2).getLocation();
+
         pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
         this.route = this.allRoutes.get(this.nextRouteIndex).replicate();
         if (this.nextRouteIndex >= this.allRoutes.size()) {
@@ -130,6 +138,9 @@ public class MIRouteMovement extends MapBasedMovement implements
         this.activeEnd1 = proto.activeEnd1;
         this.activeStart2 = proto.activeStart2;
         this.activeEnd2 = proto.activeEnd2;
+        this.destination = proto.destination;
+        this.nextRouteIndex = proto.nextRouteIndex;
+        this.lastWaypoint = proto.lastWaypoint;
 
         if (firstStopIndex < 0) {
             /* set a random starting position on the route */
@@ -151,19 +162,19 @@ public class MIRouteMovement extends MapBasedMovement implements
     public Path getPath() {
         Path p = new Path(generateSpeed());
         //final double curTime = SimClock.getTime();
+        SimMap map = super.getMap();
+        // lastWaypoint is the first node, destination is the point specified above in the constructor
+        MapNode thisNode = map.getNodeByCoord(lastWaypoint);
+        MapNode destinationNode = map.getNodeByCoord(destination);
+        List<MapNode> nodes = pathFinder.getShortestPath(thisNode,
+                destinationNode);
 
-        MapNode to = route.nextStop();
-        List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
-
-        // this assertion should never fire if the map is checked in read phase
-        assert nodePath.size() > 0 : "No path from " + lastMapNode + " to " +
-                to + ". The simulation map isn't fully connected";
-
-        for (MapNode node : nodePath) { // create a Path from the shortest path
+        for (MapNode node : nodes) { // create a Path from the shortest path
             p.addWaypoint(node.getLocation());
         }
 
-        lastMapNode = to;
+        lastWaypoint = destination.clone();
+        lastMapNode = destinationNode;
 
         return p;
     }
@@ -176,6 +187,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         if (lastMapNode == null) {
             lastMapNode = route.nextStop();
         }
+        this.lastWaypoint = lastMapNode.getLocation();
 
         return lastMapNode.getLocation().clone();
     }

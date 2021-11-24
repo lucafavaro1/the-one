@@ -35,10 +35,10 @@ Group.movementModel = MIRouteMovement
 Group.router = EpidemicRouter
 
 Group1.groupID = random
-Group1.routeFile = data/example/combined.wkt
+Group1.routeFile = data/example/tutorial1N.wkt
 Group1.routeType = 1
 Group1.routeFirstStop = 0
-Group1.rwpActivePeriod = 0, 490, 4000, 4490
+Group1.rwpActivePeriod = 0, 4900, 4000, 4490
 
 Group2.groupID = tutorial1
 Group2.routeFile = data/example/tutorial1N.wkt
