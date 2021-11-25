@@ -10,7 +10,7 @@ Events.nrof = 0
 
 # Communication Interface for nodes
 nodesInterface.type = SimpleBroadcastInterface
-nodesInterface.transmitRange = 50
+nodesInterface.transmitRange = 25
 nodesInterface.transmitSpeed = 10M
 
 # Communication Interface for accessPoints
@@ -35,7 +35,7 @@ Group.movementModel = MIRouteMovement
 Group.router = EpidemicRouter
 
 Group1.groupID = random
-Group1.routeFile = data/example/tutorial1N.wkt
+Group1.routeFile = data/example/combined1.wkt
 Group1.routeType = 1
 Group1.routeFirstStop = 0
 Group1.rwpActivePeriod = 0, 4900, 4000, 4490
@@ -83,7 +83,7 @@ Group7.nrofHosts = 1
 # in case we want to do a map based model
 #MovementModel.warmup = 1000
 MapBasedMovement.nrofMapFiles = 1
-MapBasedMovement.mapFile1 = data/example/combined.wkt
+MapBasedMovement.mapFile1 = data/example/combined1.wkt
 
 
 ## GUI settings (adjust the map image on the node movement)
@@ -91,9 +91,9 @@ MapBasedMovement.mapFile1 = data/example/combined.wkt
 # GUI underlay image settings
 GUI.UnderlayImage.fileName = data/example/map.PNG
 # Image offset in pixels (x, y)
-GUI.UnderlayImage.offset = -55, -235
+GUI.UnderlayImage.offset = -50, -225
 # Scaling factor for the image
-GUI.UnderlayImage.scale = 1
+GUI.UnderlayImage.scale = 0.98
 # Image rotation (radians)
 GUI.UnderlayImage.rotate = 0
 

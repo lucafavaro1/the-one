@@ -99,7 +99,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         allRoutes = MapRoute.readRoutes(fileName, type, getMap());
         nextRouteIndex = 0;
         // definition of the destination
-        destination = allRoutes.get(0).getStops().get(allRoutes.get(0).getNrofStops()-2).getLocation();
+        //destination = allRoutes.get(0).getStops().get(allRoutes.get(0).getNrofStops()-2).getLocation();
 
         pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
         this.route = this.allRoutes.get(this.nextRouteIndex).replicate();
@@ -138,9 +138,8 @@ public class MIRouteMovement extends MapBasedMovement implements
         this.activeEnd1 = proto.activeEnd1;
         this.activeStart2 = proto.activeStart2;
         this.activeEnd2 = proto.activeEnd2;
-        this.destination = proto.destination;
-        this.nextRouteIndex = proto.nextRouteIndex;
-        this.lastWaypoint = proto.lastWaypoint;
+        //this.destination = proto.destination;
+        //this.lastWaypoint = proto.lastWaypoint;
 
         if (firstStopIndex < 0) {
             /* set a random starting position on the route */
@@ -161,6 +160,8 @@ public class MIRouteMovement extends MapBasedMovement implements
     @Override
     public Path getPath() {
         Path p = new Path(generateSpeed());
+
+        /*
         //final double curTime = SimClock.getTime();
         SimMap map = super.getMap();
         // lastWaypoint is the first node, destination is the point specified above in the constructor
@@ -175,6 +176,18 @@ public class MIRouteMovement extends MapBasedMovement implements
 
         lastWaypoint = destination.clone();
         lastMapNode = destinationNode;
+        */
+        MapNode to = route.nextStop();
+        List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
+
+        // this assertion should never fire if the map is checked in read phase
+        assert nodePath.size() > 0 : "No path from " + lastMapNode + " to " +
+                to + ". The simulation map isn't fully connected";
+
+        for (MapNode node : nodePath) { // create a Path from the shortest path
+            p.addWaypoint(node.getLocation());
+        }
+        lastMapNode = to;
 
         return p;
     }
