@@ -4,9 +4,7 @@
  */
 package movement;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import core.SettingsError;
 import core.SimClock;
@@ -100,6 +98,7 @@ public class MIRouteMovement extends MapBasedMovement implements
      */
     public MIRouteMovement(Settings settings) {
         super(settings);
+        fillTheHashMap();
         String fileName = settings.getSetting(ROUTE_FILE_S);
         int type = settings.getInt(ROUTE_TYPE_S);
         allRoutes = MapRoute.readRoutes(fileName, type, getMap());
@@ -145,6 +144,7 @@ public class MIRouteMovement extends MapBasedMovement implements
      */
     protected MIRouteMovement(MIRouteMovement proto) {
         super(proto);
+        fillTheHashMap();
         this.route = proto.allRoutes.get(proto.nextRouteIndex).replicate();
         this.firstStopIndex = proto.firstStopIndex;
         // adding the activity period feature in the MapRouteMovement
@@ -176,12 +176,12 @@ public class MIRouteMovement extends MapBasedMovement implements
     public Path getPath() {
         Path p = new Path(generateSpeed());
 
-
         //final double curTime = SimClock.getTime();
         SimMap map = super.getMap();
         // lastWaypoint is the first node, destination is the point specified above in the constructor
         MapNode thisNode = map.getNodeByCoord(lastWaypoint);
         MapNode destinationNode = map.getNodeByCoord(destination);
+
         List<MapNode> nodes = pathFinder.getShortestPath(thisNode,
                 destinationNode);
 
@@ -191,6 +191,9 @@ public class MIRouteMovement extends MapBasedMovement implements
 
         lastWaypoint = destination.clone();
         lastMapNode = destinationNode;
+
+        //destination = getCoordFromLabel(randomLable());
+
 
         /*
         MapNode to = route.nextStop();
@@ -246,11 +249,18 @@ public class MIRouteMovement extends MapBasedMovement implements
         return route.getStops();
     }
 
+    /**
+     * Match the name of the place with the corresponding coordinates
+     * @param label name of the place
+     * @return coordinate of the place
+     */
     public Coord getCoordFromLabel(String label) {
-        fillTheHashMap();
         return matchLabelWithCoord.get(label);
     }
 
+    /**
+     * Fill the hashmap with the coordinates + names of the points of interest
+     */
     public void fillTheHashMap() {
         List <MapRoute> temp;
         Coord temp1;
@@ -326,6 +336,37 @@ public class MIRouteMovement extends MapBasedMovement implements
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceS", temp1);
+
+        // OFFICES
+        file ="data/example/offices_patch.wkt";
+        temp = MapRoute.readRoutes(file, 1, getMap());
+        for(int i = 0; i < 6; i++) {
+            temp1 = temp.get(i).getStops().get(0).getLocation();
+            matchLabelWithCoord.put("office".concat(String.valueOf(i+1)), temp1);
+        }
+
+    }
+
+    /**
+     * Function to obtain a random label (offices are excluded)
+     * Don't know if wil be useful or not :)
+     * @return the label chosen
+     */
+    public String randomLabel() {
+        Random rand = new Random();
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("cafeteria");
+        labels.add("computerlab");
+        labels.add("tutorial1");
+        labels.add("tutorial2");
+        labels.add("tutorial3");
+        labels.add("tutorial4");
+        labels.add("HS1");
+        labels.add("HS2");
+        labels.add("HS3");
+        labels.add("library");
+        return labels.get(rand.nextInt(10));
+
     }
 
 
