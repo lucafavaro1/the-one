@@ -38,6 +38,7 @@ Group1.groupID = random
 Group1.routeFile = data/example/combined1.wkt
 Group1.routeType = 1
 Group1.routeFirstStop = 0
+Group1.destination = entranceN
 Group1.rwpActivePeriod = 0, 4900, 4000, 4490
 
 Group2.groupID = tutorial1
@@ -91,7 +92,7 @@ MapBasedMovement.mapFile1 = data/example/combined1.wkt
 # GUI underlay image settings
 GUI.UnderlayImage.fileName = data/example/map.PNG
 # Image offset in pixels (x, y)
-GUI.UnderlayImage.offset = -50, -225
+GUI.UnderlayImage.offset = -50, -210
 # Scaling factor for the image
 GUI.UnderlayImage.scale = 0.98
 # Image rotation (radians)
