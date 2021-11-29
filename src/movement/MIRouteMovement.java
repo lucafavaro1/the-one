@@ -27,7 +27,7 @@ import javax.xml.stream.Location;
 public class MIRouteMovement extends MapBasedMovement implements
         SwitchableMovement {
 
-    public static final String ACTIVE_SETTING = "rwpActivePeriod";
+//    public static final String ACTIVE_SETTING = "rwpActivePeriod";
 
     /**
      * Per node group setting used for selecting a route file ({@value})
@@ -80,35 +80,6 @@ public class MIRouteMovement extends MapBasedMovement implements
     private Coord destination;
     private HashMap<String, Coord> matchLabelWithCoord = new HashMap<>();
 
-    // adding the activity period feature in the MapRouteMovement
-    private final double activeStart1;
-    private final double activeEnd1;
-    private final double activeStart2;
-    private final double activeEnd2;
-
-    //==========================================================================//
-    // Implementation - activity periods
-    //==========================================================================//
-    @Override
-    public boolean isActive() {
-        final double curTime = SimClock.getTime();
-        return ((curTime >= this.activeStart1) && (curTime <= this.activeEnd1)) ||
-                ((curTime >= this.activeStart2) && (curTime <= this.activeEnd2));
-    }
-
-    @Override
-    public double nextPathAvailable() {
-        final double curTime = SimClock.getTime();
-        if (curTime < this.activeStart1) {
-            return this.activeStart1;
-        } else if (curTime > activeEnd1 && curTime < this.activeStart2) {
-            return this.activeStart2;
-        } else if (curTime > this.activeEnd2) {
-            return Double.MAX_VALUE;
-        }
-        return curTime;
-    }
-
     /**
      * Creates a new movement model based on a Settings object's settings.
      *
@@ -144,13 +115,6 @@ public class MIRouteMovement extends MapBasedMovement implements
                         this.route.getNrofStops() + " stops");
             }
         }
-
-        // adding the activity period feature in the MapRouteMovement
-        final double[] active = settings.getCsvDoubles(ACTIVE_SETTING, 4);
-        this.activeStart1 = active[0];
-        this.activeEnd1 = active[1];
-        this.activeStart2 = active[2];
-        this.activeEnd2 = active[3];
     }
 
     /**
@@ -164,11 +128,6 @@ public class MIRouteMovement extends MapBasedMovement implements
         fillTheHashMap();
         this.route = proto.allRoutes.get(proto.nextRouteIndex).replicate();
         this.firstStopIndex = proto.firstStopIndex;
-        // adding the activity period feature in the MapRouteMovement
-        this.activeStart1 = proto.activeStart1;
-        this.activeEnd1 = proto.activeEnd1;
-        this.activeStart2 = proto.activeStart2;
-        this.activeEnd2 = proto.activeEnd2;
         this.destination = proto.destination;
         this.lastWaypoint = proto.lastWaypoint;
         this.nextRouteIndex = proto.nextRouteIndex;
@@ -238,17 +197,6 @@ public class MIRouteMovement extends MapBasedMovement implements
 
         lastWaypoint = destination.clone();
         lastMapNode = destinationNode;
-
-        // this won't work, need to use activity periods for pause times (because it's real-time timeout)
-//        try {
-//            TimeUnit.SECONDS.sleep(2);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-
-//        destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
-
         return p;
     }
 

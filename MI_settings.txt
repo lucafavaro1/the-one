@@ -39,14 +39,14 @@ Group1.routeFile = data/example/combined.wkt
 Group1.routeType = 1
 #Group1.routeFirstStop = 0
 Group1.destination = office6
-Group1.rwpActivePeriod = 0, 5000, 6000, 43200
+Group1.activeTimes = 0, 5000, 6000, 43200
 
 Group2.groupID = random1
 Group2.routeFile = data/example/combined.wkt
 Group2.routeType = 1
 #Group2.routeFirstStop = 0
 Group2.destination = computerlab
-Group2.rwpActivePeriod = 0, 5000, 6000, 43200
+Group2.activeTimes = 0, 5000, 6000, 43200
 
 
 ## Map based movement -movement model specific settings
