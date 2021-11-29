@@ -175,6 +175,8 @@ public class MIRouteMovement extends MapBasedMovement implements
         }
     }
 
+    private int getPathCount = 0;
+
     @Override
     public Path getPath() {
         Path p = new Path(generateSpeed());
@@ -183,6 +185,12 @@ public class MIRouteMovement extends MapBasedMovement implements
         SimMap map = super.getMap();
         // lastWaypoint is the first node, destination is the point specified above in the constructor
         MapNode thisNode = map.getNodeByCoord(lastWaypoint);
+
+        if(getPathCount > 0) {
+            // test
+            destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
+        }
+
         MapNode destinationNode = map.getNodeByCoord(destination);
 
         List<MapNode> nodes = pathFinder.getShortestPath(thisNode,
@@ -195,16 +203,16 @@ public class MIRouteMovement extends MapBasedMovement implements
         lastWaypoint = destination.clone();
         lastMapNode = destinationNode;
 
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TimeUnit.SECONDS.sleep(2);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
 
-        destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
+//        destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
 
-
+        getPathCount += 1;
         return p;
     }
 
