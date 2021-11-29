@@ -27,8 +27,8 @@ Group.waitTime = 0, 120
 Group.speed = 1, 1
 
 # Groups
-Scenario.nrofHostGroups = 1
-Group.nrofHosts = 5
+Scenario.nrofHostGroups = 2
+Group.nrofHosts = 1
 Group.nrofInterfaces = 1
 Group.interface1 = nodesInterface
 Group.movementModel = MIRouteMovement

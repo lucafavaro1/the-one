@@ -5,6 +5,7 @@
 package movement;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import core.SettingsError;
 import core.SimClock;
@@ -14,6 +15,8 @@ import movement.map.MapRoute;
 import core.Coord;
 import core.Settings;
 import movement.map.SimMap;
+
+import javax.xml.stream.Location;
 
 /**
  * Map based movement model that uses predetermined paths within the map area.
@@ -192,22 +195,15 @@ public class MIRouteMovement extends MapBasedMovement implements
         lastWaypoint = destination.clone();
         lastMapNode = destinationNode;
 
-        //destination = getCoordFromLabel(randomLable());
-
-
-        /*
-        MapNode to = route.nextStop();
-        List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
-
-        // this assertion should never fire if the map is checked in read phase
-        assert nodePath.size() > 0 : "No path from " + lastMapNode + " to " +
-                to + ". The simulation map isn't fully connected";
-
-        for (MapNode node : nodePath) { // create a Path from the shortest path
-            p.addWaypoint(node.getLocation());
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        lastMapNode = to;
-    */
+
+
+        destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
+
 
         return p;
     }
@@ -346,6 +342,11 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     }
 
+    public enum LocationType {
+        ENTRANCE, OFFICE, TUTORIAL, LECTURE_HALL,
+        LIBRARY, COMP_LAB, CAFETERIA
+    }
+
     /**
      * Function to obtain a random label (offices are excluded)
      * Don't know if wil be useful or not :)
@@ -365,8 +366,44 @@ public class MIRouteMovement extends MapBasedMovement implements
         labels.add("HS3");
         labels.add("library");
         return labels.get(rand.nextInt(10));
-
     }
 
+    /**
+     * Function to obtain a random location label based on its type
+     * @return the label chosen
+     */
+    public String getRandomLabelOfType(LocationType type) {
 
+        Random rand = new Random();
+        ArrayList<String> labels = new ArrayList<>();
+
+        switch(type) {
+            case LIBRARY:
+                return "library";
+            case COMP_LAB:
+                return "computerlab";
+            case TUTORIAL:
+                labels.add("tutorial1");
+                labels.add("tutorial2");
+                labels.add("tutorial3");
+                labels.add("tutorial4");
+                return labels.get(rand.nextInt(4));
+            case LECTURE_HALL:
+                labels.add("HS1");
+                labels.add("HS2");
+                labels.add("HS3");
+                return labels.get(rand.nextInt(3));
+            case OFFICE:
+                labels.add("office1");
+                labels.add("office2");
+                labels.add("office3");
+                labels.add("office4");
+                labels.add("office5");
+                labels.add("office6");
+                return labels.get(rand.nextInt(6));
+            default:
+                return "cafeteria";
+
+        }
+    }
 }
