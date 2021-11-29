@@ -104,7 +104,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         allRoutes = MapRoute.readRoutes(fileName, type, getMap());
         nextRouteIndex = 0;
         // definition of the destination
-        //destination = allRoutes.get(0).getStops().get(allRoutes.get(0).getNrofStops()-2).getLocation();
+        destination = allRoutes.get(0).getStops().get(allRoutes.get(0).getNrofStops()-1).getLocation();
 
         pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
         this.route = this.allRoutes.get(this.nextRouteIndex).replicate();
@@ -207,8 +207,7 @@ public class MIRouteMovement extends MapBasedMovement implements
             p.addWaypoint(node.getLocation());
         }
         lastMapNode = to;
-
-         */
+    */
 
         return p;
     }
