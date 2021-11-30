@@ -365,7 +365,7 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 			smallerRange = myRange;
 		}
 		return this.host.getLocation().distance(
-				anotherInterface.getHost().getLocation()) <= smallerRange;
+				anotherInterface.getHost().getLocation()) <= myRange;
 	}
 
 	/**
