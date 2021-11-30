@@ -60,7 +60,7 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     // attributes to define starting and ending point
     private Coord lastWaypoint;
-    private Coord destination;
+    private String destinationLabel;
     private HashMap<String, Coord> matchLabelWithCoord = new HashMap<>();
 
     // adding the activity period feature in the MapRouteMovement
@@ -102,22 +102,14 @@ public class MIRouteMovement extends MapBasedMovement implements
         String fileName = settings.getSetting(ROUTE_FILE_S);
         int type = settings.getInt(ROUTE_TYPE_S);
         allRoutes = MapRoute.readRoutes(fileName, type, getMap());
-        nextRouteIndex = 0;
-        // definition of the destination
-        //destination = allRoutes.get(0).getStops().get(allRoutes.get(0).getNrofStops()-2).getLocation();
+        nextRouteIndex = rng.nextInt(allRoutes.size());
 
-        pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
-        this.route = this.allRoutes.get(this.nextRouteIndex).replicate();
-        if (this.nextRouteIndex >= this.allRoutes.size()) {
-            this.nextRouteIndex = 0;
-        }
 
         if(settings.contains(DESTINATION)) {
-            String label  = settings.getSetting(DESTINATION);
-            destination = getCoordFromLabel(label);
+            destinationLabel  = settings.getSetting(DESTINATION);
         }
 
-
+        pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
 
 
         if (settings.contains(ROUTE_FIRST_STOP_S)) {
@@ -145,6 +137,7 @@ public class MIRouteMovement extends MapBasedMovement implements
     protected MIRouteMovement(MIRouteMovement proto) {
         super(proto);
         fillTheHashMap();
+        this.destinationLabel = proto.destinationLabel;
         this.route = proto.allRoutes.get(proto.nextRouteIndex).replicate();
         this.firstStopIndex = proto.firstStopIndex;
         // adding the activity period feature in the MapRouteMovement
@@ -152,7 +145,6 @@ public class MIRouteMovement extends MapBasedMovement implements
         this.activeEnd1 = proto.activeEnd1;
         this.activeStart2 = proto.activeStart2;
         this.activeEnd2 = proto.activeEnd2;
-        this.destination = proto.destination;
         this.lastWaypoint = proto.lastWaypoint;
         this.nextRouteIndex = proto.nextRouteIndex;
 
@@ -175,10 +167,16 @@ public class MIRouteMovement extends MapBasedMovement implements
     @Override
     public Path getPath() {
         Path p = new Path(generateSpeed());
-
         //final double curTime = SimClock.getTime();
         SimMap map = super.getMap();
         // lastWaypoint is the first node, destination is the point specified above in the constructor
+
+        // if we wanna use the idea of specifying the destinations
+        //Coord destination = getCoordFromLabel(destinationLabel);
+
+        // if we wanna use "random" destinations setting probabilities and time dependences
+        Coord destination = getCoordFromLabel(randomLabel());
+
         MapNode thisNode = map.getNodeByCoord(lastWaypoint);
         MapNode destinationNode = map.getNodeByCoord(destination);
 
@@ -192,24 +190,6 @@ public class MIRouteMovement extends MapBasedMovement implements
         lastWaypoint = destination.clone();
         lastMapNode = destinationNode;
 
-        //destination = getCoordFromLabel(randomLable());
-
-
-        /*
-        MapNode to = route.nextStop();
-        List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
-
-        // this assertion should never fire if the map is checked in read phase
-        assert nodePath.size() > 0 : "No path from " + lastMapNode + " to " +
-                to + ". The simulation map isn't fully connected";
-
-        for (MapNode node : nodePath) { // create a Path from the shortest path
-            p.addWaypoint(node.getLocation());
-        }
-        lastMapNode = to;
-
-         */
-
         return p;
     }
 
@@ -220,6 +200,7 @@ public class MIRouteMovement extends MapBasedMovement implements
     public Coord getInitialLocation() {
         if (lastMapNode == null) {
             lastMapNode = route.nextStop();
+            //lastMapNode = route.getStops().get(rng.nextInt(route.getNrofStops()));
         }
         this.lastWaypoint = lastMapNode.getLocation();
 
@@ -251,10 +232,19 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /**
      * Match the name of the place with the corresponding coordinates
+     * In case of study, selects one random path inside the openStudy file, and returns one random point (=seat) in that
+     * study place
      * @param label name of the place
      * @return coordinate of the place
      */
     public Coord getCoordFromLabel(String label) {
+        if(label.equals("study")) {
+            String file = "data/example/openStudy.wkt";
+            List <MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
+            Random rand = new Random();
+            int whichPath = rand.nextInt(temp.size()-1)+1;  // do not change! It's made to avoid the 0 as return value
+            return(temp.get(whichPath).getStops().get(rand.nextInt(temp.get(whichPath).getNrofStops())).getLocation());
+        }
         return matchLabelWithCoord.get(label);
     }
 
@@ -365,7 +355,14 @@ public class MIRouteMovement extends MapBasedMovement implements
         labels.add("HS2");
         labels.add("HS3");
         labels.add("library");
-        return labels.get(rand.nextInt(10));
+        labels.add("study");
+        labels.add("office1");
+        labels.add("office2");
+        labels.add("office3");
+        labels.add("office4");
+        labels.add("office5");
+        labels.add("office6");
+        return labels.get(rand.nextInt(labels.size()));
 
     }
 
