@@ -54,7 +54,6 @@ extends SimpleBroadcastInterface {
       if (conSpeed > this.transmitSpeed) {
         conSpeed = this.transmitSpeed;
       }
-
       Connection con = new CBRConnection(this.host, this,
           anotherInterface.getHost(), anotherInterface, conSpeed);
       connect(con,anotherInterface);
@@ -67,8 +66,8 @@ extends SimpleBroadcastInterface {
   }
 
   public HubInterface( Settings s ) {
-    super( s );
-    final String[] hubs = s.getCsvSetting( HUB_GROUPS_SETTING );
+    super(s);
+    final String[] hubs = s.getCsvSetting(HUB_GROUPS_SETTING);
     this.hubGroups = new HashSet<>();
     Collections.addAll( this.hubGroups, hubs );
     this.connectHubs = s.getBoolean( CONNECT_HUBS_SETTING, false );

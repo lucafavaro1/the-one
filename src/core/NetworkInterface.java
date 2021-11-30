@@ -126,6 +126,7 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 		this.scanInterval = ni.scanInterval;
 		/* draw lastScanTime of [0 -- scanInterval] */
 		this.lastScanTime = rng.nextDouble() * this.scanInterval;
+
 	}
 
 	/**
@@ -140,6 +141,10 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 	 */
 	public void setHost(DTNHost host) {
 		this.host = host;
+		if(this.host.groupId.equals("AccessPoint")){
+			this.transmitRange = this.transmitRange * 3;
+		}
+
 		ModuleCommunicationBus comBus = host.getComBus();
 
 		if (!comBus.containsProperty(SCAN_INTERVAL_ID) &&
@@ -359,7 +364,6 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 		if (myRange < smallerRange) {
 			smallerRange = myRange;
 		}
-
 		return this.host.getLocation().distance(
 				anotherInterface.getHost().getLocation()) <= smallerRange;
 	}

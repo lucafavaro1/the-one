@@ -9,14 +9,12 @@ MovementModel.worldSize = 3000,3000
 Events.nrof = 0
 
 # Communication Interface for nodes
-nodesInterface.type = SimpleBroadcastInterface
+# nodesInterface.type = SimpleBroadcastInterface
+nodesInterface.type = HubInterface
+nodesInterface.hubGroups = AccessPoint
 nodesInterface.transmitRange = 50
 nodesInterface.transmitSpeed = 10M
 
-# Communication Interface for accessPoints
-APInterface.type = SimpleBroadcastInterface
-APInterface.transmitRange = 100
-APInterface.transmitSpeed = 1000M
 
 
 # Common settings for all groups
@@ -27,8 +25,8 @@ Group.waitTime = 0, 120
 Group.speed = 1, 1
 
 # Groups
-Scenario.nrofHostGroups = 2
-Group.nrofHosts = 10
+Scenario.nrofHostGroups = 3
+Group.nrofHosts = 5
 Group.nrofInterfaces = 1
 Group.interface1 = nodesInterface
 Group.movementModel = MIRouteMovement
@@ -46,11 +44,11 @@ Group2.routeType = 1
 Group2.destination = study
 Group2.rwpActivePeriod = 0, 40000, 40000, 40000
 
-Group3.groupID = wifiAP
+
+Group3.groupID = AccessPoint
 Group3.nrofHosts = 1
 Group3.movementModel = StationaryMovement
 Group3.nodeLocation = 820, 50
-Group3.interface1 = APInterface
 
 
 ## Map based movement -movement model specific settings
