@@ -10,7 +10,7 @@ Events.nrof = 0
 
 # Communication Interface for nodes
 nodesInterface.type = SimpleBroadcastInterface
-nodesInterface.transmitRange = 50
+nodesInterface.transmitRange = 25
 nodesInterface.transmitSpeed = 10M
 
 # Communication Interface for accessPoints
@@ -37,20 +37,14 @@ Group.router = EpidemicRouter
 Group1.groupID = random0
 Group1.routeFile = data/example/combined.wkt
 Group1.routeType = 1
-Group1.destination = study
-Group1.rwpActivePeriod = 0, 40000, 40000, 40000
+Group1.destination = office6
+Group1.activeTimes = 0, 5000, 6000, 43200
 
-Group2.groupID = others
+Group2.groupID = random1
 Group2.routeFile = data/example/combined.wkt
 Group2.routeType = 1
-Group2.destination = study
-Group2.rwpActivePeriod = 0, 40000, 40000, 40000
-
-Group3.groupID = wifiAP
-Group3.nrofHosts = 1
-Group3.movementModel = StationaryMovement
-Group3.nodeLocation = 820, 50
-Group3.interface1 = APInterface
+Group2.destination = computerlab
+Group2.activeTimes = 0, 5000, 6000, 43200
 
 
 ## Map based movement -movement model specific settings

@@ -5,6 +5,7 @@
 package movement;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import core.SettingsError;
 import core.SimClock;
@@ -15,6 +16,8 @@ import core.Coord;
 import core.Settings;
 import movement.map.SimMap;
 
+import javax.xml.stream.Location;
+
 /**
  * Map based movement model that uses predetermined paths within the map area.
  * Nodes using this model (can) stop on every route waypoint and find their
@@ -23,8 +26,6 @@ import movement.map.SimMap;
  */
 public class MIRouteMovement extends MapBasedMovement implements
         SwitchableMovement {
-
-    public static final String ACTIVE_SETTING = "rwpActivePeriod";
 
     /** Per node group setting used for selecting a route file ({@value}) */
     public static final String ROUTE_FILE_S = "routeFile";
@@ -60,37 +61,9 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     // attributes to define starting and ending point
     private Coord lastWaypoint;
+    private Coord destination;
     private String destinationLabel;
     private HashMap<String, Coord> matchLabelWithCoord = new HashMap<>();
-
-    // adding the activity period feature in the MapRouteMovement
-    private final double activeStart1;
-    private final double activeEnd1;
-    private final double activeStart2;
-    private final double activeEnd2;
-
-    //==========================================================================//
-    // Implementation - activity periods
-    //==========================================================================//
-    @Override
-    public boolean isActive() {
-        final double curTime = SimClock.getTime();
-        return (( curTime >= this.activeStart1 ) && ( curTime <= this.activeEnd1 )) ||
-                (( curTime >= this.activeStart2 ) && ( curTime <= this.activeEnd2 ));
-    }
-
-    @Override
-    public double nextPathAvailable() {
-        final double curTime = SimClock.getTime();
-        if ( curTime < this.activeStart1 ) {
-            return this.activeStart1;
-        } else if (curTime > activeEnd1 && curTime < this.activeStart2) {
-            return this.activeStart2;
-        } else if ( curTime > this.activeEnd2) {
-            return Double.MAX_VALUE;
-        }
-        return curTime;
-    }
 
     /**
      * Creates a new movement model based on a Settings object's settings.
@@ -102,15 +75,22 @@ public class MIRouteMovement extends MapBasedMovement implements
         String fileName = settings.getSetting(ROUTE_FILE_S);
         int type = settings.getInt(ROUTE_TYPE_S);
         allRoutes = MapRoute.readRoutes(fileName, type, getMap());
-        nextRouteIndex = rng.nextInt(allRoutes.size());
-
-
+        // Luca
+        //nextRouteIndex = rng.nextInt(allRoutes.size());
         if(settings.contains(DESTINATION)) {
             destinationLabel  = settings.getSetting(DESTINATION);
         }
+        // Lena
+        nextRouteIndex = 0;
+        //
 
         pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
-
+        // Lena
+        this.route = this.allRoutes.get(this.nextRouteIndex).replicate();
+        if (this.nextRouteIndex >= this.allRoutes.size()) {
+            this.nextRouteIndex = 0;
+        }
+        //
 
         if (settings.contains(ROUTE_FIRST_STOP_S)) {
             this.firstStopIndex = settings.getInt(ROUTE_FIRST_STOP_S);
@@ -121,12 +101,6 @@ public class MIRouteMovement extends MapBasedMovement implements
             }
         }
 
-        // adding the activity period feature in the MapRouteMovement
-        final double[] active = settings.getCsvDoubles( ACTIVE_SETTING ,4 );
-        this.activeStart1 = active[0];
-        this.activeEnd1 = active[1];
-        this.activeStart2 = active [2];
-        this.activeEnd2 = active[3];
     }
 
     /**
@@ -140,11 +114,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         this.destinationLabel = proto.destinationLabel;
         this.route = proto.allRoutes.get(proto.nextRouteIndex).replicate();
         this.firstStopIndex = proto.firstStopIndex;
-        // adding the activity period feature in the MapRouteMovement
-        this.activeStart1 = proto.activeStart1;
-        this.activeEnd1 = proto.activeEnd1;
-        this.activeStart2 = proto.activeStart2;
-        this.activeEnd2 = proto.activeEnd2;
+        this.destination = proto.destination;
         this.lastWaypoint = proto.lastWaypoint;
         this.nextRouteIndex = proto.nextRouteIndex;
 
@@ -167,17 +137,45 @@ public class MIRouteMovement extends MapBasedMovement implements
     @Override
     public Path getPath() {
         Path p = new Path(generateSpeed());
-        //final double curTime = SimClock.getTime();
-        SimMap map = super.getMap();
-        // lastWaypoint is the first node, destination is the point specified above in the constructor
 
+        SimMap map = super.getMap();
         // if we wanna use the idea of specifying the destinations
-        //Coord destination = getCoordFromLabel(destinationLabel);
+        Coord destination = getCoordFromLabel(destinationLabel);
 
         // if we wanna use "random" destinations setting probabilities and time dependences
-        Coord destination = getCoordFromLabel(randomLabel());
+        //Coord destination = getCoordFromLabel(randomLabel());
 
         MapNode thisNode = map.getNodeByCoord(lastWaypoint);
+
+        final double curTime = SimClock.getTime();
+        // TODO: implement change of destination based on simulation time + schedule scenario
+        /*
+        In my opinion, changing destinations should be done here,
+        but movement and activity periods should be managed in DTNHost class.
+
+        for example: choose lunch for the nodes based on probability
+            - check that it's lunch time (3000s from the beginning, for example)
+            - generate a random number between 0 and 100
+            - if 0-70 - go out through entrance N
+            - if 70-85 - go to cafeteria
+            - if 85 to 100 - stay where you are
+         */
+        if (curTime >= 3000 && curTime < 5000) {
+            Random rand = new Random();
+            int number = rand.nextInt(100);
+
+            if (number < 70) {
+                destination = getCoordFromLabel("entranceN");
+            } else if (number < 85) {
+                destination = getCoordFromLabel("cafeteria");
+            } else {
+                destination = thisNode.getLocation();
+            }
+        } else {
+            // if it's not lunch time, nodes will randomly move between lecture halls
+            destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
+        }
+
         MapNode destinationNode = map.getNodeByCoord(destination);
 
         List<MapNode> nodes = pathFinder.getShortestPath(thisNode,
@@ -200,7 +198,6 @@ public class MIRouteMovement extends MapBasedMovement implements
     public Coord getInitialLocation() {
         if (lastMapNode == null) {
             lastMapNode = route.nextStop();
-            //lastMapNode = route.getStops().get(rng.nextInt(route.getNrofStops()));
         }
         this.lastWaypoint = lastMapNode.getLocation();
 
@@ -232,8 +229,6 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /**
      * Match the name of the place with the corresponding coordinates
-     * In case of study, selects one random path inside the openStudy file, and returns one random point (=seat) in that
-     * study place
      * @param label name of the place
      * @return coordinate of the place
      */
@@ -337,6 +332,11 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     }
 
+    public enum LocationType {
+        ENTRANCE, OFFICE, TUTORIAL, LECTURE_HALL,
+        LIBRARY, COMP_LAB, CAFETERIA
+    }
+
     /**
      * Function to obtain a random label (offices are excluded)
      * Don't know if wil be useful or not :)
@@ -363,7 +363,46 @@ public class MIRouteMovement extends MapBasedMovement implements
         labels.add("office5");
         labels.add("office6");
         return labels.get(rand.nextInt(labels.size()));
+    }
 
+    /**
+     * Function to obtain a random location label based on its type
+     *
+     * @return the label chosen
+     */
+    public String getRandomLabelOfType(LocationType type) {
+
+        Random rand = new Random();
+        ArrayList<String> labels = new ArrayList<>();
+
+        switch (type) {
+            case LIBRARY:
+                return "library";
+            case COMP_LAB:
+                return "computerlab";
+            case TUTORIAL:
+                labels.add("tutorial1");
+                labels.add("tutorial2");
+                labels.add("tutorial3");
+                labels.add("tutorial4");
+                return labels.get(rand.nextInt(4));
+            case LECTURE_HALL:
+                labels.add("HS1");
+                labels.add("HS2");
+                labels.add("HS3");
+                return labels.get(rand.nextInt(3));
+            case OFFICE:
+                labels.add("office1");
+                labels.add("office2");
+                labels.add("office3");
+                labels.add("office4");
+                labels.add("office5");
+                labels.add("office6");
+                return labels.get(rand.nextInt(6));
+            default:
+                return "cafeteria";
+
+        }
     }
 
 
