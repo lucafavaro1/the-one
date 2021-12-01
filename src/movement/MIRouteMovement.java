@@ -5,7 +5,6 @@
 package movement;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import core.SettingsError;
 import core.SimClock;
@@ -15,8 +14,6 @@ import movement.map.MapRoute;
 import core.Coord;
 import core.Settings;
 import movement.map.SimMap;
-
-import javax.xml.stream.Location;
 
 /**
  * Map based movement model that uses predetermined paths within the map area.
@@ -63,7 +60,16 @@ public class MIRouteMovement extends MapBasedMovement implements
     private Coord lastWaypoint;
     private Coord destination;
     private String destinationLabel;
+
     private HashMap<String, Coord> matchLabelWithCoord = new HashMap<>();
+
+    /**
+     * Getter method for the hashmap
+     * @return the hashmap containing all the labels and matched coordinates
+     */
+    public HashMap<String, Coord> getMatchLabelWithCoord() {
+        return matchLabelWithCoord;
+    }
 
     /**
      * Creates a new movement model based on a Settings object's settings.
@@ -75,22 +81,21 @@ public class MIRouteMovement extends MapBasedMovement implements
         String fileName = settings.getSetting(ROUTE_FILE_S);
         int type = settings.getInt(ROUTE_TYPE_S);
         allRoutes = MapRoute.readRoutes(fileName, type, getMap());
-        // Luca
-        //nextRouteIndex = rng.nextInt(allRoutes.size());
+
         if(settings.contains(DESTINATION)) {
             destinationLabel  = settings.getSetting(DESTINATION);
         }
-        // Lena
+
         nextRouteIndex = 0;
-        //
+
 
         pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
-        // Lena
+
         this.route = this.allRoutes.get(this.nextRouteIndex).replicate();
         if (this.nextRouteIndex >= this.allRoutes.size()) {
             this.nextRouteIndex = 0;
         }
-        //
+
 
         if (settings.contains(ROUTE_FIRST_STOP_S)) {
             this.firstStopIndex = settings.getInt(ROUTE_FIRST_STOP_S);
@@ -139,12 +144,6 @@ public class MIRouteMovement extends MapBasedMovement implements
         Path p = new Path(generateSpeed());
 
         SimMap map = super.getMap();
-        // if we wanna use the idea of specifying the destinations
-        Coord destination = getCoordFromLabel(destinationLabel);
-
-        // if we wanna use "random" destinations setting probabilities and time dependences
-        //Coord destination = getCoordFromLabel(randomLabel());
-
         MapNode thisNode = map.getNodeByCoord(lastWaypoint);
 
         final double curTime = SimClock.getTime();
@@ -159,8 +158,21 @@ public class MIRouteMovement extends MapBasedMovement implements
             - if 0-70 - go out through entrance N
             - if 70-85 - go to cafeteria
             - if 85 to 100 - stay where you are
-         */
-        if (curTime >= 3000 && curTime < 5000) {
+        */
+
+        if(curTime >= 0 && curTime <3000) {
+            Random rand = new Random();
+            int number = rand.nextInt(100);
+
+            if (number < 70) {
+                destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
+            } else if (number < 85) {
+                destination = getCoordFromLabel("study");
+            } else {
+                destination = getCoordFromLabel(getRandomLabelOfType(LocationType.TUTORIAL));
+            }
+        }
+        else if (curTime >= 3000 && curTime < 5000) {
             Random rand = new Random();
             int number = rand.nextInt(100);
 
@@ -175,6 +187,7 @@ public class MIRouteMovement extends MapBasedMovement implements
             // if it's not lunch time, nodes will randomly move between lecture halls
             destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
         }
+
 
         MapNode destinationNode = map.getNodeByCoord(destination);
 
@@ -334,35 +347,30 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     public enum LocationType {
         ENTRANCE, OFFICE, TUTORIAL, LECTURE_HALL,
-        LIBRARY, COMP_LAB, CAFETERIA
+        LIBRARY, COMP_LAB, CAFETERIA, STUDY_ZONE
     }
 
-    /**
-     * Function to obtain a random label (offices are excluded)
-     * Don't know if wil be useful or not :)
-     * @return the label chosen
-     */
-    public String randomLabel() {
+    public LocationType getRandomType() {
         Random rand = new Random();
-        ArrayList<String> labels = new ArrayList<>();
-        labels.add("cafeteria");
-        labels.add("computerlab");
-        labels.add("tutorial1");
-        labels.add("tutorial2");
-        labels.add("tutorial3");
-        labels.add("tutorial4");
-        labels.add("HS1");
-        labels.add("HS2");
-        labels.add("HS3");
-        labels.add("library");
-        labels.add("study");
-        labels.add("office1");
-        labels.add("office2");
-        labels.add("office3");
-        labels.add("office4");
-        labels.add("office5");
-        labels.add("office6");
-        return labels.get(rand.nextInt(labels.size()));
+        switch (rand.nextInt(8)) {
+            case 0:
+                return LocationType.ENTRANCE;
+            case 1:
+                return LocationType.OFFICE;
+            case 2:
+                return LocationType.TUTORIAL;
+            case 3:
+                return LocationType.LECTURE_HALL;
+            case 4:
+                return LocationType.LECTURE_HALL;
+            case 5:
+                return LocationType.COMP_LAB;
+            case 6:
+                return LocationType.CAFETERIA;
+            default:
+                return LocationType.STUDY_ZONE;
+        }
+
     }
 
     /**
@@ -378,6 +386,8 @@ public class MIRouteMovement extends MapBasedMovement implements
         switch (type) {
             case LIBRARY:
                 return "library";
+            case STUDY_ZONE:
+                return "study";
             case COMP_LAB:
                 return "computerlab";
             case TUTORIAL:

@@ -23,7 +23,7 @@ Group.waitTime = 0, 120
 Group.speed = 1, 1
 
 # Groups
-Scenario.nrofHostGroups = 2
+Scenario.nrofHostGroups = 3
 Group.nrofHosts = 10
 Group.nrofInterfaces = 1
 Group.interface1 = nodesInterface
@@ -33,13 +33,18 @@ Group.router = EpidemicRouter
 Group1.groupID = random0
 Group1.routeFile = data/example/combined.wkt
 Group1.routeType = 1
-Group1.destination = study
-Group1.rwpActivePeriod = 0, 40000, 40000, 40000
+Group1.destination = computerlab
 
 Group2.groupID = AccessPoint
 Group2.nrofHosts = 1
 Group2.movementModel = StationaryMovement
 Group2.nodeLocation = 820, 50
+
+Group3.groupID = AccessPoint
+Group3.nrofHosts = 1
+Group3.movementModel = StationaryMovement
+Group3.nodeLocation = 580, 50
+
 
 
 ## Map based movement -movement model specific settings
