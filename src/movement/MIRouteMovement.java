@@ -147,47 +147,44 @@ public class MIRouteMovement extends MapBasedMovement implements
         MapNode thisNode = map.getNodeByCoord(lastWaypoint);
 
         final double curTime = SimClock.getTime();
-        // TODO: implement change of destination based on simulation time + schedule scenario
-        /*
-        In my opinion, changing destinations should be done here,
-        but movement and activity periods should be managed in DTNHost class.
+        LocationType destinationType = LocationType.ENTRANCE;
+        int percentage = getRandomPercentage();
 
-        for example: choose lunch for the nodes based on probability
-            - check that it's lunch time (3000s from the beginning, for example)
-            - generate a random number between 0 and 100
-            - if 0-70 - go out through entrance N
-            - if 70-85 - go to cafeteria
-            - if 85 to 100 - stay where you are
-        */
+        // 8am - 10am
+        if(curTime > 0 && curTime <= 7200) {
+            percentage = getRandomPercentage();
 
-        if(curTime >= 0 && curTime <3000) {
-            Random rand = new Random();
-            int number = rand.nextInt(100);
-
-            if (number < 70) {
-                destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
-            } else if (number < 85) {
-                destination = getCoordFromLabel("study");
+            if (percentage < 45) {
+                destinationType = LocationType.TUTORIAL;
+            } else if (percentage < 90) {
+                destinationType = LocationType.LECTURE_HALL;
+            } else if (percentage < 92) {
+                destinationType = LocationType.LIBRARY;
+            } else if (percentage < 96) {
+                destinationType = LocationType.COMP_LAB;
             } else {
-                destination = getCoordFromLabel(getRandomLabelOfType(LocationType.TUTORIAL));
+                destinationType = LocationType.STUDY_ZONE;
             }
         }
-        else if (curTime >= 3000 && curTime < 5000) {
-            Random rand = new Random();
-            int number = rand.nextInt(100);
 
-            if (number < 70) {
-                destination = getCoordFromLabel("entranceN");
-            } else if (number < 85) {
-                destination = getCoordFromLabel("cafeteria");
+        // 10am - 12
+        else if(curTime > 7200 && curTime <= 14400) {
+            percentage = getRandomPercentage();
+
+            if (percentage < 35) {
+                destinationType = LocationType.TUTORIAL;
+            } else if (percentage < 70) {
+                destinationType = LocationType.LECTURE_HALL;
+            } else if (percentage < 76) {
+                destinationType = LocationType.LIBRARY;
+            } else if (percentage < 88) {
+                destinationType = LocationType.COMP_LAB;
             } else {
-                destination = thisNode.getLocation();
+                destinationType = LocationType.STUDY_ZONE;
             }
-        } else {
-            // if it's not lunch time, nodes will randomly move between lecture halls
-            destination = getCoordFromLabel(getRandomLabelOfType(LocationType.LECTURE_HALL));
         }
 
+        destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
 
         MapNode destinationNode = map.getNodeByCoord(destination);
 
@@ -202,6 +199,11 @@ public class MIRouteMovement extends MapBasedMovement implements
         lastMapNode = destinationNode;
 
         return p;
+    }
+
+    private int getRandomPercentage() {
+        Random rand = new Random();
+        return rand.nextInt(100);
     }
 
     /**
@@ -362,7 +364,7 @@ public class MIRouteMovement extends MapBasedMovement implements
             case 3:
                 return LocationType.LECTURE_HALL;
             case 4:
-                return LocationType.LECTURE_HALL;
+                return LocationType.LIBRARY;
             case 5:
                 return LocationType.COMP_LAB;
             case 6:
