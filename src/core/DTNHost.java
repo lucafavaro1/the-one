@@ -449,20 +449,7 @@ public class DTNHost implements Comparable<DTNHost> {
 
             // add wait times based on location
             if (this.movement instanceof MIRouteMovement) {
-                // lunch break basic example
-                final double curTime = SimClock.getTime();
-				// time to reach lunch spot
-                if (curTime >= 3000 && curTime < 4000) {
-                    Coord cafeteriaLocation = ((MIRouteMovement) this.movement).getCoordFromLabel("cafeteria");
-					Coord entranceN = ((MIRouteMovement) this.movement).getCoordFromLabel("entranceN");
-                    if (this.location.equals(cafeteriaLocation)) {
-                        System.out.println(this.name + " at cafeteria.");
-                        this.nextTimeToMove += 4000;
-                    } else if (this.location.equals(entranceN)) {
-						System.out.println(this.name + " went to Mensa.");
-						this.nextTimeToMove += 5000;
-					}
-                }
+                addPauseTime();
             }
 
             this.path = null;
@@ -591,6 +578,24 @@ public class DTNHost implements Comparable<DTNHost> {
      */
     public int compareTo(DTNHost h) {
         return this.getAddress() - h.getAddress();
+    }
+
+    public void addPauseTime() {
+        // lunch break basic example
+        final double curTime = SimClock.getTime();
+        // time to reach lunch spot
+
+        if (curTime >= 3000 && curTime < 4000) {
+            Coord cafeteriaLocation = ((MIRouteMovement) this.movement).getCoordFromLabel("cafeteria");
+            Coord entranceN = ((MIRouteMovement) this.movement).getCoordFromLabel("entranceN");
+            if (this.location.equals(cafeteriaLocation)) {
+                System.out.println(this.name + " at cafeteria.");
+                this.nextTimeToMove += 4000;
+            } else if (this.location.equals(entranceN)) {
+                System.out.println(this.name + " went to Mensa.");
+                this.nextTimeToMove += 5000;
+            }
+        }
     }
 
 }
