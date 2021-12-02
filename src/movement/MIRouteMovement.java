@@ -24,7 +24,9 @@ import movement.map.SimMap;
 public class MIRouteMovement extends MapBasedMovement implements
         SwitchableMovement {
 
-    /** Per node group setting used for selecting a route file ({@value}) */
+    /**
+     * Per node group setting used for selecting a route file ({@value})
+     */
     public static final String ROUTE_FILE_S = "routeFile";
 
     /**
@@ -40,17 +42,27 @@ public class MIRouteMovement extends MapBasedMovement implements
      */
     public static final String ROUTE_FIRST_STOP_S = "routeFirstStop";
 
-    /** the Dijkstra shortest path finder */
+    /**
+     * the Dijkstra shortest path finder
+     */
     private DijkstraPathFinder pathFinder;
 
-    /** Prototype's reference to all routes read for the group */
+    /**
+     * Prototype's reference to all routes read for the group
+     */
     private List<MapRoute> allRoutes = null;
-    /** next route's index to give by prototype */
+    /**
+     * next route's index to give by prototype
+     */
     private Integer nextRouteIndex;
-    /** Index of the first stop for a group of nodes (or -1 for random) */
+    /**
+     * Index of the first stop for a group of nodes (or -1 for random)
+     */
     private int firstStopIndex = -1;
 
-    /** Route of the movement model's instance */
+    /**
+     * Route of the movement model's instance
+     */
     private MapRoute route;
 
     // attributes to define starting and ending point
@@ -62,6 +74,7 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /**
      * Getter method for the hashmap
+     *
      * @return hashmap containing all the labels and matched coordinates
      */
     public HashMap<String, Coord> getMatchLabelWithCoord() {
@@ -70,6 +83,7 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /**
      * Getter method for an array of coords that contains all the possible "seats" in the two study zones
+     *
      * @return arraylist containing the coordinates
      */
     public ArrayList<Coord> getAllStudyCoords() {
@@ -78,6 +92,7 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /**
      * Creates a new movement model based on a Settings object's settings.
+     *
      * @param settings The Settings object where the settings are read from
      */
     public MIRouteMovement(Settings settings) {
@@ -112,6 +127,7 @@ public class MIRouteMovement extends MapBasedMovement implements
     /**
      * Copyconstructor. Gives a route to the new movement model from the
      * list of routes and randomizes the starting position.
+     *
      * @param proto The MapRouteMovement prototype
      */
     protected MIRouteMovement(MIRouteMovement proto) {
@@ -126,7 +142,7 @@ public class MIRouteMovement extends MapBasedMovement implements
 
         if (firstStopIndex < 0) {
             /* set a random starting position on the route */
-            this.route.setNextIndex(rng.nextInt(route.getNrofStops()-1));
+            this.route.setNextIndex(rng.nextInt(route.getNrofStops() - 1));
         } else {
             /* use the one defined in the config file */
             this.route.setNextIndex(this.firstStopIndex);
@@ -152,7 +168,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         double probability;
 
         // 8am - 10am
-        if(curTime > 0 && curTime <= 7200) {
+        if (curTime > 0 && curTime <= 7200) {
             probability = getRandomFraction();
 
             if (probability < 0.45) {
@@ -171,7 +187,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         }
 
         // 10am - 12
-        else if(curTime > 7200 && curTime <= 14400) {
+        else if (curTime > 7200 && curTime <= 14400) {
             probability = getRandomFraction();
 
             if (probability < 0.35) {
@@ -190,7 +206,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         }
 
         // lunch time (12 - 1pm)
-        else if(curTime > 14400 && curTime <= 18000) {
+        else if (curTime > 14400 && curTime <= 18000) {
             probability = getRandomFraction();
 
             if (probability < 0.7) {
@@ -203,7 +219,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         }
 
         // 1pm - 4pm
-        else if(curTime > 18000 && curTime <= 28800) {
+        else if (curTime > 18000 && curTime <= 28800) {
             probability = getRandomFraction();
 
             if (probability < 0.245) {
@@ -224,7 +240,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         }
 
         // 4pm - 6pm
-        else if(curTime > 28800 && curTime <= 36000) {
+        else if (curTime > 28800 && curTime <= 36000) {
             probability = getRandomFraction();
 
             if (probability < 0.105) {
@@ -245,7 +261,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         }
 
         // 6pm - 8pm (without exit)
-        else if(curTime > 36000 && curTime <= 43000) {
+        else if (curTime > 36000 && curTime <= 42000) {
             probability = getRandomFraction();
 
             if (probability < 0.0175) {
@@ -272,14 +288,13 @@ public class MIRouteMovement extends MapBasedMovement implements
                 } else {
                     destination = getCoordFromLabel("entranceS");
                 }
-
             }
 
             destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
         }
 
         // EXIT around 8pm
-        else if(curTime > 43000) {
+        else if (curTime > 42000) {
             probability = getRandomFraction();
 
             if (probability < 0.28) {
@@ -291,7 +306,10 @@ public class MIRouteMovement extends MapBasedMovement implements
             } else if (probability < 0.35) {
                 destination = getCoordFromLabel("entranceS");
             } else {
-                // those nodes are already at the entrances (left)
+                // hack
+                if (!isAtEntrance()) {
+                    destination = getCoordFromLabel("entranceN");
+                }
             }
 
         }
@@ -324,6 +342,24 @@ public class MIRouteMovement extends MapBasedMovement implements
         return p;
     }
 
+    private boolean isAtEntrance() {
+        boolean atEntrance = false;
+
+        MapNode thisNode = super.getMap().getNodeByCoord(lastWaypoint);
+
+        if (thisNode.getLocation().equals(getCoordFromLabel("entranceN"))) {
+            atEntrance = true;
+        } else if (thisNode.getLocation().equals(getCoordFromLabel("entranceE"))) {
+            atEntrance = true;
+        } else if (thisNode.getLocation().equals(getCoordFromLabel("entranceS"))) {
+            atEntrance = true;
+        } else if (thisNode.getLocation().equals(getCoordFromLabel("entranceW"))) {
+            atEntrance = true;
+        }
+
+        return atEntrance;
+    }
+
     private double getRandomFraction() {
         Random rand = new Random();
         return rand.nextDouble();
@@ -340,13 +376,13 @@ public class MIRouteMovement extends MapBasedMovement implements
             double fraction = getRandomFraction();
             Coord location;
 
-            if(fraction < 0.095) {
+            if (fraction < 0.095) {
                 location = getCoordFromLabel(getRandomLabelOfType(LocationType.STUDY_ZONE));
-            } else if(fraction < 0.815) {
+            } else if (fraction < 0.815) {
                 location = getCoordFromLabel("entranceN");
-            } else if(fraction < 0.86) {
+            } else if (fraction < 0.86) {
                 location = getCoordFromLabel("entranceE");
-            } else if(fraction < 0.95) {
+            } else if (fraction < 0.95) {
                 location = getCoordFromLabel("entranceW");
             } else {
                 location = getCoordFromLabel("entranceS");
@@ -376,6 +412,7 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /**
      * Returns the list of stops on the route
+     *
      * @return The list of stops
      */
     public List<MapNode> getStops() {
@@ -384,16 +421,17 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     /**
      * Match the name of the place with the corresponding coordinates
+     *
      * @param label name of the place
      * @return coordinate of the place
      */
     public Coord getCoordFromLabel(String label) {
-        if(label.equals("study")) {
+        if (label.equals("study")) {
             String file = "data/example/openStudy.wkt";
-            List <MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
+            List<MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
             Random rand = new Random();
-            int whichPath = rand.nextInt(temp.size()-1)+1;  // do not change! It's made to avoid the 0 as return value
-            return(temp.get(whichPath).getStops().get(rand.nextInt(temp.get(whichPath).getNrofStops())).getLocation());
+            int whichPath = rand.nextInt(temp.size() - 1) + 1;  // do not change! It's made to avoid the 0 as return value
+            return (temp.get(whichPath).getStops().get(rand.nextInt(temp.get(whichPath).getNrofStops())).getLocation());
         }
         return matchLabelWithCoord.get(label);
     }
@@ -402,96 +440,96 @@ public class MIRouteMovement extends MapBasedMovement implements
      * Fill the hashmap with the coordinates + names of the points of interest
      */
     public void fillTheHashMap() {
-        List <MapRoute> temp;
+        List<MapRoute> temp;
         Coord temp1;
 
         fillAllStudyCoords();
 
-        String file ="data/example/cafeteriaN.wkt";
+        String file = "data/example/cafeteriaN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("cafeteria", temp1);
 
-        file ="data/example/HS1_N.wkt";
+        file = "data/example/HS1_N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("HS1", temp1);
 
-        file ="data/example/HS2_N.wkt";
+        file = "data/example/HS2_N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("HS2", temp1);
 
-        file ="data/example/HS3_N.wkt";
+        file = "data/example/HS3_N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("HS3", temp1);
 
-        file ="data/example/tutorial1N.wkt";
+        file = "data/example/tutorial1N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial1", temp1);
 
-        file ="data/example/tutorial2N.wkt";
+        file = "data/example/tutorial2N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial2", temp1);
 
-        file ="data/example/tutorial3N.wkt";
+        file = "data/example/tutorial3N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial3", temp1);
 
-        file ="data/example/tutorial4N.wkt";
+        file = "data/example/tutorial4N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial4", temp1);
 
-        file ="data/example/computerlabN.wkt";
+        file = "data/example/computerlabN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("computerlab", temp1);
 
-        file ="data/example/libraryN.wkt";
+        file = "data/example/libraryN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops()-1).getLocation();
+        temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("library", temp1);
 
         // ENTRANCES
 
-        file ="data/example/cafeteriaN.wkt";
+        file = "data/example/cafeteriaN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceN", temp1);
 
-        file ="data/example/cafeteriaE.wkt";
+        file = "data/example/cafeteriaE.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceE", temp1);
 
-        file ="data/example/cafeteriaW.wkt";
+        file = "data/example/cafeteriaW.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceW", temp1);
 
-        file ="data/example/cafeteriaS.wkt";
+        file = "data/example/cafeteriaS.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceS", temp1);
 
         // OFFICES
-        file ="data/example/offices_patch.wkt";
+        file = "data/example/offices_patch.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             temp1 = temp.get(i).getStops().get(0).getLocation();
-            matchLabelWithCoord.put("office".concat(String.valueOf(i+1)), temp1);
+            matchLabelWithCoord.put("office".concat(String.valueOf(i + 1)), temp1);
         }
 
     }
 
     public void fillAllStudyCoords() {
         String file = "data/example/openStudy.wkt";
-        List <MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
+        List<MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
         for (MapRoute mapRoute : temp) {
             for (int j = 0; j < mapRoute.getNrofStops(); j++) {
                 allStudyCoords.add(mapRoute.getStops().get(j).getLocation());

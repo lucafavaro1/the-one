@@ -1,7 +1,7 @@
 #Settings of our personal scenario
 
 Scenario.name = MI_Wifi_Scenario
-Scenario.endTime = 43200
+Scenario.endTime = 50000
 #43200s == 12h (from 8am to 8pm)
 Scenario.updateInterval = 1
 Scenario.simulateConnections = true
