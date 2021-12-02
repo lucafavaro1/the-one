@@ -217,7 +217,7 @@ public class MIRouteMovement extends MapBasedMovement implements
             } else if (probability < 0.7) {
                 destinationType = LocationType.STUDY_ZONE;
             } else {
-                // TODO: those nodes are already at the entrances (left)
+                // those nodes are already at the entrance N (left)
             }
 
             destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
@@ -238,7 +238,7 @@ public class MIRouteMovement extends MapBasedMovement implements
             } else if (probability < 0.7) {
                 destinationType = LocationType.STUDY_ZONE;
             } else {
-                // TODO: those nodes are already at the entrances (left)
+                // those nodes are already at the entrance N (left)
             }
 
             destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
@@ -259,7 +259,20 @@ public class MIRouteMovement extends MapBasedMovement implements
             } else if (probability < 0.07) {
                 destinationType = LocationType.STUDY_ZONE;
             } else {
-                // TODO: those nodes are already at the entrances (left)
+                // 0.93 leave or left already
+                // nodes that are at entranceN - already left, remaining leave through different entrances
+                if (thisNode.getLocation().equals(getCoordFromLabel("entranceN"))) {
+                    destination = getCoordFromLabel("entranceN");
+                } else if (probability < 0.814) {
+                    destination = getCoordFromLabel("entranceN");
+                } else if (probability < 0.86) {
+                    destination = getCoordFromLabel("entranceE");
+                } else if (probability < 0.95) {
+                    destination = getCoordFromLabel("entranceW");
+                } else {
+                    destination = getCoordFromLabel("entranceS");
+                }
+
             }
 
             destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
@@ -278,7 +291,7 @@ public class MIRouteMovement extends MapBasedMovement implements
             } else if (probability < 0.35) {
                 destination = getCoordFromLabel("entranceS");
             } else {
-                // TODO: those nodes are already at the entrances (left)
+                // those nodes are already at the entrances (left)
             }
 
         }
