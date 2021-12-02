@@ -2,7 +2,7 @@
 
 Scenario.name = MI_Wifi_Scenario
 Scenario.endTime = 50000
-#43200s == 12h (from 8am to 8pm)
+#43200s == 12h (from 8am to 8pm) + remaining time to show that nodes ends their current activity and move toward
 Scenario.updateInterval = 1
 Scenario.simulateConnections = true
 MovementModel.worldSize = 3000,3000
@@ -23,7 +23,7 @@ Group.waitTime = 0, 120
 Group.speed = 1, 1
 
 # Groups
-Scenario.nrofHostGroups = 19
+Scenario.nrofHostGroups = 20
 Group.nrofHosts = 100
 Group.nrofInterfaces = 1
 Group.interface1 = nodesInterface
@@ -34,6 +34,15 @@ Group.router = EpidemicRouter
 Group1.groupID = students
 Group1.routeFile = data/example/combined.wkt
 Group1.routeType = 1
+
+# employees
+Group20.groupID = employees
+Group20.nrofHosts = 30
+Group20.movementModel = EmployeesMovement
+Group20.routeType = 1
+Group20.routeFile = data/example/combined.wkt
+
+
 
 # HS1 access point
 Group2.groupID = AccessPoint
@@ -139,6 +148,7 @@ Group19.groupID = AccessPoint
 Group19.nrofHosts = 1
 Group19.movementModel = StationaryMovement
 Group19.nodeLocation = 1380, 360
+
 
 ## Map based movement -movement model specific settings
 # in case we want to do a map based model

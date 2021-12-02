@@ -221,6 +221,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         // 1pm - 4pm
         else if (curTime > 18000 && curTime <= 28800) {
             probability = getRandomFraction();
+            boolean trick = false;
 
             if (probability < 0.245) {
                 destinationType = LocationType.TUTORIAL;
@@ -233,10 +234,12 @@ public class MIRouteMovement extends MapBasedMovement implements
             } else if (probability < 0.7) {
                 destinationType = LocationType.STUDY_ZONE;
             } else {
+                trick = true;
                 // those nodes are already at the entrance N (left)
             }
 
-            destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
+            if (!trick)
+                destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
         }
 
         // 4pm - 6pm
@@ -371,7 +374,6 @@ public class MIRouteMovement extends MapBasedMovement implements
     @Override
     public Coord getInitialLocation() {
         if (lastMapNode == null) {
-//            lastMapNode = route.nextStop();
 
             double fraction = getRandomFraction();
             Coord location;

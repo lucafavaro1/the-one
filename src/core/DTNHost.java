@@ -445,7 +445,7 @@ public class DTNHost implements Comparable<DTNHost> {
 
 
             // add wait times based on location
-            if (this.movement instanceof MIRouteMovement) {
+            if (this.movement instanceof MIRouteMovement || this.movement instanceof EmployeesMovement) {
                 addPauseTime();
             }
 
@@ -580,8 +580,7 @@ public class DTNHost implements Comparable<DTNHost> {
     public void addPauseTime() {
         final double curTime = SimClock.getTime();
 
-        //if(this.movement.getClass().equals(MIRouteMovement.class)) {
-            //System.out.println("entra nel primo");
+        if (this.movement.getClass().equals(MIRouteMovement.class)) {
             // between 8 am and 12 am
             if (curTime >= 0 && curTime < 14400) {
                 if (this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("cafeteria")))
@@ -611,8 +610,8 @@ public class DTNHost implements Comparable<DTNHost> {
                     this.nextTimeToMove += 7200;
                 }
             }
-            // between 13 and 20
-            else {
+            // between 13 and 18
+            else if (curTime >= 18000 && curTime < 36000) {
                 if (this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("cafeteria"))) {
                     this.nextTimeToMove += 600;
                 }
@@ -629,10 +628,18 @@ public class DTNHost implements Comparable<DTNHost> {
                     this.nextTimeToMove += 7200;
                 }
             }
-        //}
-        /*
-        else if(this.movement.getClass().equals(EmployeesMovement.class)) {
-            //System.out.println("entra nel secondo");
+            // between 18 and 20
+            else {
+                if (this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("cafeteria"))) {
+                    this.nextTimeToMove += 600;
+                }
+                // for lecture halls / tutorial halls / library / study tables / computerlab
+                else if ((((MIRouteMovement) this.movement).getMatchLabelWithCoord().containsValue((this.location)))
+                        || (((MIRouteMovement) this.movement).getAllStudyCoords().contains((this.location)))) {
+                    this.nextTimeToMove += 3600;
+                }
+            }
+        } else if (this.movement.getClass().equals(EmployeesMovement.class)) {
             // between 8 am and 12 am
             if (curTime >= 0 && curTime < 14400) {
                 if (((EmployeesMovement) this.movement).getAllOfficeCoords().contains((this.location)))
@@ -641,20 +648,16 @@ public class DTNHost implements Comparable<DTNHost> {
                 if ((this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("cafeteria")))
                         || this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceN")))
                     this.nextTimeToMove += 3600;
-            }
-            else if (curTime >= 18000 && curTime < 36000) {
+            } else if (curTime >= 18000 && curTime < 36000) {
                 if (((EmployeesMovement) this.movement).getAllOfficeCoords().contains((this.location)))
                     this.nextTimeToMove += 18000;
-            }
-            else if (curTime >= 36000)
-                   if((this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceN"))) ||
-                            this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceS")) ||
-                            this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceE")) ||
-                            this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceW")))
-                       this.nextTimeToMove += 26000;
+            } else if (curTime >= 36000)
+                if ((this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceN"))) ||
+                        this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceS")) ||
+                        this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceE")) ||
+                        this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceW")))
+                    this.nextTimeToMove += 26000;
         }
-         */
-
 
     }
 
