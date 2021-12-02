@@ -149,43 +149,152 @@ public class MIRouteMovement extends MapBasedMovement implements
 
         final double curTime = SimClock.getTime();
         LocationType destinationType = LocationType.ENTRANCE;
-        int percentage = getRandomPercentage();
+        double probability;
 
         // 8am - 10am
         if(curTime > 0 && curTime <= 7200) {
-            percentage = getRandomPercentage();
+            probability = getRandomFraction();
 
-            if (percentage < 45) {
+            if (probability < 0.45) {
                 destinationType = LocationType.TUTORIAL;
-            } else if (percentage < 90) {
+            } else if (probability < 0.90) {
                 destinationType = LocationType.LECTURE_HALL;
-            } else if (percentage < 92) {
+            } else if (probability < 0.92) {
                 destinationType = LocationType.LIBRARY;
-            } else if (percentage < 96) {
+            } else if (probability < 0.96) {
                 destinationType = LocationType.COMP_LAB;
             } else {
                 destinationType = LocationType.STUDY_ZONE;
             }
+
+            destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
         }
 
         // 10am - 12
         else if(curTime > 7200 && curTime <= 14400) {
-            percentage = getRandomPercentage();
+            probability = getRandomFraction();
 
-            if (percentage < 35) {
+            if (probability < 0.35) {
                 destinationType = LocationType.TUTORIAL;
-            } else if (percentage < 70) {
+            } else if (probability < 0.70) {
                 destinationType = LocationType.LECTURE_HALL;
-            } else if (percentage < 76) {
+            } else if (probability < 0.76) {
                 destinationType = LocationType.LIBRARY;
-            } else if (percentage < 88) {
+            } else if (probability < 0.88) {
                 destinationType = LocationType.COMP_LAB;
             } else {
                 destinationType = LocationType.STUDY_ZONE;
             }
+
+            destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
         }
 
-        destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
+        // lunch time (12 - 1pm)
+        else if(curTime > 14400 && curTime <= 18000) {
+            probability = getRandomFraction();
+
+            if (probability < 0.7) {
+                destination = getCoordFromLabel("entranceN");
+            } else if (probability < 0.85) {
+                destination = getCoordFromLabel("cafeteria");
+            } else {
+                destination = thisNode.getLocation();
+            }
+        }
+
+        // 1pm - 4pm
+        else if(curTime > 18000 && curTime <= 28800) {
+            probability = getRandomFraction();
+
+            if (probability < 0.245) {
+                destinationType = LocationType.TUTORIAL;
+            } else if (probability < 0.49) {
+                destinationType = LocationType.LECTURE_HALL;
+            } else if (probability < 0.532) {
+                destinationType = LocationType.LIBRARY;
+            } else if (probability < 0.616) {
+                destinationType = LocationType.COMP_LAB;
+            } else if (probability < 0.7) {
+                destinationType = LocationType.STUDY_ZONE;
+            } else {
+                // TODO: those nodes are already at the entrances (left)
+            }
+
+            destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
+        }
+
+        // 4pm - 6pm
+        else if(curTime > 28800 && curTime <= 36000) {
+            probability = getRandomFraction();
+
+            if (probability < 0.105) {
+                destinationType = LocationType.TUTORIAL;
+            } else if (probability < 0.21) {
+                destinationType = LocationType.LECTURE_HALL;
+            } else if (probability < 0.308) {
+                destinationType = LocationType.LIBRARY;
+            } else if (probability < 0.504) {
+                destinationType = LocationType.COMP_LAB;
+            } else if (probability < 0.7) {
+                destinationType = LocationType.STUDY_ZONE;
+            } else {
+                // TODO: those nodes are already at the entrances (left)
+            }
+
+            destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
+        }
+
+        // 6pm - 8pm (without exit)
+        else if(curTime > 36000 && curTime <= 43000) {
+            probability = getRandomFraction();
+
+            if (probability < 0.0175) {
+                destinationType = LocationType.TUTORIAL;
+            } else if (probability < 0.035) {
+                destinationType = LocationType.LECTURE_HALL;
+            } else if (probability < 0.042) {
+                destinationType = LocationType.LIBRARY;
+            } else if (probability < 0.056) {
+                destinationType = LocationType.COMP_LAB;
+            } else if (probability < 0.07) {
+                destinationType = LocationType.STUDY_ZONE;
+            } else {
+                // TODO: those nodes are already at the entrances (left)
+            }
+
+            destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
+        }
+
+        // EXIT around 8pm
+        else if(curTime > 43000) {
+            probability = getRandomFraction();
+
+            if (probability < 0.28) {
+                destination = getCoordFromLabel("entranceN");
+            } else if (probability < 0.2975) {
+                destination = getCoordFromLabel("entranceE");
+            } else if (probability < 0.3325) {
+                destination = getCoordFromLabel("entranceW");
+            } else if (probability < 0.35) {
+                destination = getCoordFromLabel("entranceS");
+            } else {
+                // TODO: those nodes are already at the entrances (left)
+            }
+
+        }
+
+        // modelling nodes that are not coming back (after 2pm)
+        if (curTime > 21600) {
+            if (thisNode.getLocation().equals(getCoordFromLabel("entranceN"))) {
+                destination = getCoordFromLabel("entranceN");
+            } else if (thisNode.getLocation().equals(getCoordFromLabel("entranceE"))) {
+                destination = getCoordFromLabel("entranceE");
+            } else if (thisNode.getLocation().equals(getCoordFromLabel("entranceS"))) {
+                destination = getCoordFromLabel("entranceS");
+            } else if (thisNode.getLocation().equals(getCoordFromLabel("entranceW"))) {
+                destination = getCoordFromLabel("entranceW");
+            }
+        }
 
         MapNode destinationNode = map.getNodeByCoord(destination);
 
@@ -202,9 +311,9 @@ public class MIRouteMovement extends MapBasedMovement implements
         return p;
     }
 
-    private int getRandomPercentage() {
+    private double getRandomFraction() {
         Random rand = new Random();
-        return rand.nextInt(100);
+        return rand.nextDouble();
     }
 
     /**
