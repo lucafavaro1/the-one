@@ -322,7 +322,24 @@ public class MIRouteMovement extends MapBasedMovement implements
     @Override
     public Coord getInitialLocation() {
         if (lastMapNode == null) {
-            lastMapNode = route.nextStop();
+//            lastMapNode = route.nextStop();
+
+            double fraction = getRandomFraction();
+            Coord location;
+
+            if(fraction < 0.095) {
+                location = getCoordFromLabel(getRandomLabelOfType(LocationType.STUDY_ZONE));
+            } else if(fraction < 0.815) {
+                location = getCoordFromLabel("entranceN");
+            } else if(fraction < 0.86) {
+                location = getCoordFromLabel("entranceE");
+            } else if(fraction < 0.95) {
+                location = getCoordFromLabel("entranceW");
+            } else {
+                location = getCoordFromLabel("entranceS");
+            }
+
+            lastMapNode = new MapNode(location);
         }
         this.lastWaypoint = lastMapNode.getLocation();
 
