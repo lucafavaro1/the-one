@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import movement.MIRouteMovement;
-import movement.MapBasedMovement;
-import movement.MovementModel;
-import movement.Path;
+import movement.*;
 import routing.MessageRouter;
 import routing.util.RoutingInfo;
 
@@ -581,21 +578,85 @@ public class DTNHost implements Comparable<DTNHost> {
     }
 
     public void addPauseTime() {
-        // lunch break basic example
         final double curTime = SimClock.getTime();
-        // time to reach lunch spot
 
-        if (curTime >= 3000 && curTime < 4000) {
-            Coord cafeteriaLocation = ((MIRouteMovement) this.movement).getCoordFromLabel("cafeteria");
-            Coord entranceN = ((MIRouteMovement) this.movement).getCoordFromLabel("entranceN");
-            if (this.location.equals(cafeteriaLocation)) {
-                System.out.println(this.name + " at cafeteria.");
-                this.nextTimeToMove += 4000;
-            } else if (this.location.equals(entranceN)) {
-                System.out.println(this.name + " went to Mensa.");
-                this.nextTimeToMove += 5000;
+        //if(this.movement.getClass().equals(MIRouteMovement.class)) {
+            //System.out.println("entra nel primo");
+            // between 8 am and 12 am
+            if (curTime >= 0 && curTime < 14400) {
+                if (this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("cafeteria")))
+                    this.nextTimeToMove += 600;
+                    // for lecture halls / tutorial halls / library / study tables / computerlab
+                else if ((((MIRouteMovement) this.movement).getMatchLabelWithCoord().containsValue((this.location)))
+                        || (((MIRouteMovement) this.movement).getAllStudyCoords().contains((this.location))))
+                    this.nextTimeToMove += 7200;
+
             }
+            // between 12 and 13
+            else if (curTime >= 14400 & curTime < 18000) {
+                // for cafeteria
+                if (this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("cafeteria"))) {
+                    this.nextTimeToMove += 3600;
+                }
+                // for mensa
+                else if ((this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceN"))) ||
+                        this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceS")) ||
+                        this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceE")) ||
+                        this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceW"))) {
+                    this.nextTimeToMove += 3600;
+                }
+                // for lecture halls / tutorial halls / library / study tables / computerlab
+                else if ((((MIRouteMovement) this.movement).getMatchLabelWithCoord().containsValue((this.location)))
+                        || (((MIRouteMovement) this.movement).getAllStudyCoords().contains((this.location)))) {
+                    this.nextTimeToMove += 7200;
+                }
+            }
+            // between 13 and 20
+            else {
+                if (this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("cafeteria"))) {
+                    this.nextTimeToMove += 600;
+                }
+                // if you go out in the afternoon than you don't come back
+                else if ((this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceN"))) ||
+                        this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceS")) ||
+                        this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceE")) ||
+                        this.location.equals(((MIRouteMovement) this.movement).getMatchLabelWithCoord().get("entranceW"))) {
+                    this.nextTimeToMove += 26000;
+                }
+                // for lecture halls / tutorial halls / library / study tables / computerlab
+                else if ((((MIRouteMovement) this.movement).getMatchLabelWithCoord().containsValue((this.location)))
+                        || (((MIRouteMovement) this.movement).getAllStudyCoords().contains((this.location)))) {
+                    this.nextTimeToMove += 7200;
+                }
+            }
+        //}
+        /*
+        else if(this.movement.getClass().equals(EmployeesMovement.class)) {
+            //System.out.println("entra nel secondo");
+            // between 8 am and 12 am
+            if (curTime >= 0 && curTime < 14400) {
+                if (((EmployeesMovement) this.movement).getAllOfficeCoords().contains((this.location)))
+                    this.nextTimeToMove += 14400;
+            } else if (curTime >= 14400 && curTime < 18000) {
+                if ((this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("cafeteria")))
+                        || this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceN")))
+                    this.nextTimeToMove += 3600;
+            }
+            else if (curTime >= 18000 && curTime < 36000) {
+                if (((EmployeesMovement) this.movement).getAllOfficeCoords().contains((this.location)))
+                    this.nextTimeToMove += 18000;
+            }
+            else if (curTime >= 36000)
+                   if((this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceN"))) ||
+                            this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceS")) ||
+                            this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceE")) ||
+                            this.location.equals(((EmployeesMovement) this.movement).getMatchLabelWithCoord().get("entranceW")))
+                       this.nextTimeToMove += 26000;
         }
+         */
+
+
     }
 
 }
+

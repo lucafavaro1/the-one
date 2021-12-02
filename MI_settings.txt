@@ -24,16 +24,16 @@ Group.speed = 1, 1
 
 # Groups
 Scenario.nrofHostGroups = 19
-Group.nrofHosts = 10
+Group.nrofHosts = 100
 Group.nrofInterfaces = 1
 Group.interface1 = nodesInterface
 Group.movementModel = MIRouteMovement
 Group.router = EpidemicRouter
 
-Group1.groupID = random0
+# students
+Group1.groupID = students
 Group1.routeFile = data/example/combined.wkt
 Group1.routeType = 1
-Group1.destination = computerlab
 
 # HS1 access point
 Group2.groupID = AccessPoint
@@ -79,6 +79,7 @@ Group9.nrofHosts = 1
 Group9.movementModel = StationaryMovement
 Group9.nodeLocation = 280, 45
 
+
 Group10.groupID = AccessPoint
 Group10.nrofHosts = 1
 Group10.movementModel = StationaryMovement
@@ -113,6 +114,7 @@ Group15.groupID = AccessPoint
 Group15.nrofHosts = 1
 Group15.movementModel = StationaryMovement
 Group15.nodeLocation = 890, 355
+
 
 # HS2 access point
 Group16.groupID = AccessPoint

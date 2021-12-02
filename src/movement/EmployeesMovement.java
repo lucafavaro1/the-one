@@ -21,7 +21,7 @@ import movement.map.SimMap;
  * way to next waypoint using {@link DijkstraPathFinder}. There can be
  * different type of routes; see {@link #ROUTE_TYPE_S}.
  */
-public class MIRouteMovement extends MapBasedMovement implements
+public class EmployeesMovement extends MapBasedMovement implements
         SwitchableMovement {
 
     /** Per node group setting used for selecting a route file ({@value}) */
@@ -58,29 +58,22 @@ public class MIRouteMovement extends MapBasedMovement implements
     private Coord destination;
 
     private HashMap<String, Coord> matchLabelWithCoord = new HashMap<>();
-    private ArrayList<Coord> allStudyCoords = new ArrayList<>();
 
-    /**
-     * Getter method for the hashmap
-     * @return hashmap containing all the labels and matched coordinates
-     */
-    public HashMap<String, Coord> getMatchLabelWithCoord() {
-        return matchLabelWithCoord;
+    private ArrayList<Coord> allOfficeCoords = new ArrayList<>();
+
+    public ArrayList<Coord> getAllOfficeCoords() {
+        return allOfficeCoords;
     }
 
-    /**
-     * Getter method for an array of coords that contains all the possible "seats" in the two study zones
-     * @return arraylist containing the coordinates
-     */
-    public ArrayList<Coord> getAllStudyCoords() {
-        return allStudyCoords;
+    public HashMap<String, Coord> getMatchLabelWithCoord() {
+        return matchLabelWithCoord;
     }
 
     /**
      * Creates a new movement model based on a Settings object's settings.
      * @param settings The Settings object where the settings are read from
      */
-    public MIRouteMovement(Settings settings) {
+    public EmployeesMovement(Settings settings) {
         super(settings);
         fillTheHashMap();
         String fileName = settings.getSetting(ROUTE_FILE_S);
@@ -114,14 +107,14 @@ public class MIRouteMovement extends MapBasedMovement implements
      * list of routes and randomizes the starting position.
      * @param proto The MapRouteMovement prototype
      */
-    protected MIRouteMovement(MIRouteMovement proto) {
+    protected EmployeesMovement(EmployeesMovement proto) {
         super(proto);
         fillTheHashMap();
         this.route = proto.allRoutes.get(proto.nextRouteIndex).replicate();
         this.firstStopIndex = proto.firstStopIndex;
         this.destination = proto.destination;
         this.lastWaypoint = proto.lastWaypoint;
-        this.allStudyCoords = proto.allStudyCoords;
+        this.allOfficeCoords = proto.allOfficeCoords;
         this.nextRouteIndex = proto.nextRouteIndex;
 
         if (firstStopIndex < 0) {
@@ -148,44 +141,40 @@ public class MIRouteMovement extends MapBasedMovement implements
         MapNode thisNode = map.getNodeByCoord(lastWaypoint);
 
         final double curTime = SimClock.getTime();
-        LocationType destinationType = LocationType.ENTRANCE;
-        int percentage = getRandomPercentage();
+        Random rng = new Random();
+        int percentage;
+        String destinationType = "";
 
-        // 8am - 10am
-        if(curTime > 0 && curTime <= 7200) {
+        // 8am - 12am
+        if(curTime > 0 && curTime <= 14400)
+            destinationType = "office".concat(String.valueOf(rng.nextInt(6)+1));
+        else if (curTime > 14400 && curTime <= 18000) {
             percentage = getRandomPercentage();
-
-            if (percentage < 45) {
-                destinationType = LocationType.TUTORIAL;
-            } else if (percentage < 90) {
-                destinationType = LocationType.LECTURE_HALL;
-            } else if (percentage < 92) {
-                destinationType = LocationType.LIBRARY;
-            } else if (percentage < 96) {
-                destinationType = LocationType.COMP_LAB;
-            } else {
-                destinationType = LocationType.STUDY_ZONE;
-            }
+            if (percentage <= 70)
+                destinationType = "entranceN";
+            else if (percentage <= 85)
+                destinationType = "cafeteria";
+            else
+                destinationType = "office".concat(String.valueOf(rng.nextInt(6) + 1));
+        }
+        // 12 am - 1 pm
+        else if (curTime > 18000 && curTime <= 36000) {
+            destinationType = "office".concat(String.valueOf(rng.nextInt(6)+1));
+        }
+        // 1 pm - 6pm
+        else if(curTime > 36000) {
+            percentage = getRandomPercentage();
+            if(percentage <= 80)
+                destinationType = "entranceN";
+            else if(percentage <= 90)
+                destinationType = "entranceW";
+            else if(percentage <= 95)
+                destinationType = "entranceS";
+            else
+                destinationType = "entranceE";
         }
 
-        // 10am - 12
-        else if(curTime > 7200 && curTime <= 14400) {
-            percentage = getRandomPercentage();
-
-            if (percentage < 35) {
-                destinationType = LocationType.TUTORIAL;
-            } else if (percentage < 70) {
-                destinationType = LocationType.LECTURE_HALL;
-            } else if (percentage < 76) {
-                destinationType = LocationType.LIBRARY;
-            } else if (percentage < 88) {
-                destinationType = LocationType.COMP_LAB;
-            } else {
-                destinationType = LocationType.STUDY_ZONE;
-            }
-        }
-
-        destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
+        destination = getCoordFromLabel(destinationType);
 
         MapNode destinationNode = map.getNodeByCoord(destination);
 
@@ -231,17 +220,10 @@ public class MIRouteMovement extends MapBasedMovement implements
 
 
     @Override
-    public MIRouteMovement replicate() {
-        return new MIRouteMovement(this);
+    public EmployeesMovement replicate() {
+        return new EmployeesMovement(this);
     }
 
-    /**
-     * Returns the list of stops on the route
-     * @return The list of stops
-     */
-    public List<MapNode> getStops() {
-        return route.getStops();
-    }
 
     /**
      * Match the name of the place with the corresponding coordinates
@@ -249,13 +231,6 @@ public class MIRouteMovement extends MapBasedMovement implements
      * @return coordinate of the place
      */
     public Coord getCoordFromLabel(String label) {
-        if(label.equals("study")) {
-            String file = "data/example/openStudy.wkt";
-            List <MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
-            Random rand = new Random();
-            int whichPath = rand.nextInt(temp.size()-1)+1;  // do not change! It's made to avoid the 0 as return value
-            return(temp.get(whichPath).getStops().get(rand.nextInt(temp.get(whichPath).getNrofStops())).getLocation());
-        }
         return matchLabelWithCoord.get(label);
     }
 
@@ -266,7 +241,7 @@ public class MIRouteMovement extends MapBasedMovement implements
         List <MapRoute> temp;
         Coord temp1;
 
-        fillAllStudyCoords();
+        fillAllOfficeCoords();
 
         String file ="data/example/cafeteriaN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
@@ -350,85 +325,15 @@ public class MIRouteMovement extends MapBasedMovement implements
 
     }
 
-    public void fillAllStudyCoords() {
-        String file = "data/example/openStudy.wkt";
+    public void fillAllOfficeCoords() {
+        String file ="data/example/offices_patch.wkt";
         List <MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
-        for (MapRoute mapRoute : temp) {
-            for (int j = 0; j < mapRoute.getNrofStops(); j++) {
-                allStudyCoords.add(mapRoute.getStops().get(j).getLocation());
-            }
+        for(int i = 0; i < 6; i++) {
+            Coord temp1 = temp.get(i).getStops().get(0).getLocation();
+            allOfficeCoords.add(temp1);
         }
     }
 
-    public enum LocationType {
-        ENTRANCE, OFFICE, TUTORIAL, LECTURE_HALL,
-        LIBRARY, COMP_LAB, CAFETERIA, STUDY_ZONE
-    }
-
-    public LocationType getRandomType() {
-        Random rand = new Random();
-        switch (rand.nextInt(8)) {
-            case 0:
-                return LocationType.ENTRANCE;
-            case 1:
-                return LocationType.OFFICE;
-            case 2:
-                return LocationType.TUTORIAL;
-            case 3:
-                return LocationType.LECTURE_HALL;
-            case 4:
-                return LocationType.LIBRARY;
-            case 5:
-                return LocationType.COMP_LAB;
-            case 6:
-                return LocationType.CAFETERIA;
-            default:
-                return LocationType.STUDY_ZONE;
-        }
-
-    }
-
-    /**
-     * Function to obtain a random location label based on its type
-     *
-     * @return the label chosen
-     */
-    public String getRandomLabelOfType(LocationType type) {
-
-        Random rand = new Random();
-        ArrayList<String> labels = new ArrayList<>();
-
-        switch (type) {
-            case LIBRARY:
-                return "library";
-            case STUDY_ZONE:
-                return "study";
-            case COMP_LAB:
-                return "computerlab";
-            case TUTORIAL:
-                labels.add("tutorial1");
-                labels.add("tutorial2");
-                labels.add("tutorial3");
-                labels.add("tutorial4");
-                return labels.get(rand.nextInt(4));
-            case LECTURE_HALL:
-                labels.add("HS1");
-                labels.add("HS2");
-                labels.add("HS3");
-                return labels.get(rand.nextInt(3));
-            case OFFICE:
-                labels.add("office1");
-                labels.add("office2");
-                labels.add("office3");
-                labels.add("office4");
-                labels.add("office5");
-                labels.add("office6");
-                return labels.get(rand.nextInt(6));
-            default:
-                return "cafeteria";
-
-        }
-    }
 
 
 }
