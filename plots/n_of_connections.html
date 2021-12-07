@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="plot"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+
+<script>
+  PLOT = document.getElementById('plot');
+
+  layout = {
+    title: 'Number of Connections',
+    showlegend: true
+  }
+
+  config = {
+    responsive: true
+  }
+
+  traces = []
+
+  for (let i = 0; i < 18; i++) {
+    let trace = { name: 'AP ' + i, x: [], y: [] }
+    traces.push(trace)
+  }
+
+  Plotly.newPlot(PLOT, traces, layout, config)
+
+  let granularity = 100
+
+  for (ap = 0; ap < 18; ap++) {
+    let file_path =  "../reports/AP" + ap + "_" + granularity + ".txt"
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+      if (rawFile.readyState === 4) {
+        if (rawFile.status === 200 || rawFile.status == 0) {
+          let allText = rawFile.responseText;
+          let lines = allText.split('\n');
+          for (let line = 0; line < lines.length; line++) {
+            let numbers = lines[line].split(' ')
+            let t_data = numbers[0]
+            let n_data = numbers[1]
+
+            Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [ap])
+          }
+        }
+      }
+    }
+    rawFile.send(null);
+  }
+
+</script>
+</body>
+</html>
