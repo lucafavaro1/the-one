@@ -1,7 +1,7 @@
 #Settings of our personal scenario
 
 Scenario.name = MI_Wifi_Scenario
-Scenario.endTime = 10000
+Scenario.endTime = 50000
 #43200s == 12h (from 8am to 8pm) + remaining time to show that nodes ends their current activity and move toward
 Scenario.updateInterval = 1
 Scenario.simulateConnections = true
@@ -176,5 +176,7 @@ GUI.UnderlayImage.rotate = 0
 # Reports
 Report.nrofReports = 1
 Report.report1 = EventLogReport
+EventLogReport.accessPoint = 6
+EventLogReport.granularity = 100
 Report.reportDir = reports
 

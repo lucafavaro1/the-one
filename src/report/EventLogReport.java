@@ -5,10 +5,7 @@
 package report;
 
 import com.sun.javafx.image.IntPixelGetter;
-import core.ConnectionListener;
-import core.DTNHost;
-import core.Message;
-import core.MessageListener;
+import core.*;
 import input.StandardEventsReader;
 
 import java.lang.reflect.Array;
@@ -37,9 +34,27 @@ public class EventLogReport extends Report
 	/** Extra info for message relayed event ("delivered again"): {@value} */
 	public static final String MESSAGE_TRANS_DELIVERED_AGAIN = "A";
 
+
+	public static final String SPECIFYACCESSPOINT = "accessPoint";
+	public static final String GRANULARITY = "granularity";
+
+
 	public int[] numberConnections = new int[18];
+	private int accessPointNumber = 0;
+	private int granularity = 0;
 	public Double simTime = 0.0;
 	public int totalHostsConnected = 0;
+
+	public EventLogReport() {
+		super();
+		Settings settings = getSettings();
+		if(settings.contains(SPECIFYACCESSPOINT)) {
+			accessPointNumber = settings.getInt(SPECIFYACCESSPOINT);
+		}
+		if(settings.contains(GRANULARITY)) {
+			granularity = settings.getInt(GRANULARITY);
+		}
+	}
 	/**
 	 * Processes a log event by writing a line to the report file
 	 * @param action The action as a string
@@ -71,7 +86,9 @@ public class EventLogReport extends Report
 		}
 		else {
 			totalHostsConnected = Arrays.stream(numberConnections).sum();
-			write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
+			//write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
+			if(simTime % granularity == 0)
+				write(simTime + " " + String.valueOf(numberConnections[accessPointNumber]));
 			simTime = getSimTime();
 			totalHostsConnected = 0;
 			processEvent(action, host1, host2, message, extra);
