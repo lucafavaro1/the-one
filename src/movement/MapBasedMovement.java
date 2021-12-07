@@ -192,7 +192,7 @@ public class MapBasedMovement extends MovementModel implements SwitchableMovemen
 		p.addWaypoint(curNode.getLocation());
 
 		int pathLength = rng.nextInt(maxPathLength-minPathLength) +
-			minPathLength;
+				minPathLength;
 
 		for (int i=0; i<pathLength; i++) {
 			neighbors = curNode.getNeighbors();
@@ -360,7 +360,7 @@ public class MapBasedMovement extends MovementModel implements SwitchableMovemen
 	 * @throws SettingsError if some map node is out of bounds
 	 */
 	private void checkCoordValidity(List<MapNode> nodes) {
-		 // Check that all map nodes are within world limits
+		// Check that all map nodes are within world limits
 		for (MapNode n : nodes) {
 			double x = n.getLocation().getX();
 			double y = n.getLocation().getY();

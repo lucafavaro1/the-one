@@ -1,7 +1,7 @@
 #Settings of our personal scenario
 
 Scenario.name = MI_Wifi_Scenario
-Scenario.endTime = 50000
+Scenario.endTime = 10000
 #43200s == 12h (from 8am to 8pm) + remaining time to show that nodes ends their current activity and move toward
 Scenario.updateInterval = 1
 Scenario.simulateConnections = true
@@ -16,14 +16,14 @@ nodesInterface.transmitSpeed = 10M
 
 
 # Common settings for all groups
-Group.bufferSize = 5M
-Group.waitTime = 0, 120
+#Group.bufferSize = 5M
+Group.waitTime = 0, 100
 
 # Walking speeds
-Group.speed = 1, 1
+Group.speed = 0.9, 1.1
 
 # Groups
-Scenario.nrofHostGroups = 20
+Scenario.nrofHostGroups = 21
 Group.nrofHosts = 100
 Group.nrofInterfaces = 1
 Group.interface1 = nodesInterface
@@ -31,18 +31,23 @@ Group.movementModel = MIRouteMovement
 Group.router = EpidemicRouter
 
 # students
-Group1.groupID = students
+Group1.groupID = s
 Group1.routeFile = data/example/combined.wkt
 Group1.routeType = 1
 
 # employees
-Group20.groupID = employees
+Group20.groupID = e
 Group20.nrofHosts = 30
 Group20.movementModel = EmployeesMovement
 Group20.routeType = 1
 Group20.routeFile = data/example/combined.wkt
 
-
+# generic people moving in the hallway/rooms during the whole simulation
+Group21.groupID = others
+Group21.nrofHosts = 10
+Group21.movementModel = POIMovementModel
+Group21.routeType = 1
+Group21.routeFile = data/example/combined.wkt
 
 # HS1 access point
 Group2.groupID = AccessPoint
@@ -169,4 +174,7 @@ GUI.UnderlayImage.scale = 0.98
 GUI.UnderlayImage.rotate = 0
 
 # Reports
-Report.nrofReports = 0
+Report.nrofReports = 1
+Report.report1 = EventLogReport
+Report.reportDir = reports
+
