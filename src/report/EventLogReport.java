@@ -4,7 +4,7 @@
  */
 package report;
 
-import com.sun.javafx.image.IntPixelGetter;
+//import com.sun.javafx.image.IntPixelGetter;
 import core.*;
 import input.StandardEventsReader;
 
