@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number of Connections</title>
+</head>
+<body>
+<div id="plot"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+
+<script>
+    PLOT = document.getElementById('plot');
+    var layout = {
+        title: 'Maximum number of Connections per Access Point'}
+    var data = [
+        {
+            x: ["HS1","Offices1","Computer Lab", "Offices2", "Study Zone1","Tutorial1", "Study Zone2","Tutorial2","Tutorial3","Library","Offices3","Offices4","Cafeteria","Tutorial4","HS3", "Offices5", "HS2", "Offices6"],
+            y: [ 14,9,19,6,22,12,11,11,15,11,7,8,43,13,18,8,18,9],
+            type: 'bar'
+        }
+    ];
+
+    Plotly.newPlot(PLOT, data,layout);
+
+</script>
+</body>
+</html>
