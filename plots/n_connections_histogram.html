@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="plot"></div>
+
+<div id="plot2"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+
+<script>
+
+    traces2 = []
+
+    PLOT2 = document.getElementById('plot2');
+
+    layout2 = {
+        title: 'test',
+        showlegend: true
+    }
+
+    config2 = {
+        responsive: true
+    }
+
+    for (let i = 0; i < 18; i++) {
+        let trace2 = { name: 'AP ' + i, x: [], type: 'histogram'}
+        traces2.push(trace2)
+    }
+
+    Plotly.newPlot(PLOT2, traces2, layout2, config2)
+
+    let granularity = 100
+    for (ap = 0; ap < 18; ap++) {
+        let file_path =  "../reports/AP" + ap + "_" + granularity + ".txt"
+
+        rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file_path, false);
+        rawFile.onreadystatechange = function () {
+            if (rawFile.readyState === 4) {
+                if (rawFile.status === 200 || rawFile.status == 0) {
+                    let allText = rawFile.responseText;
+                    let lines = allText.split('\n');
+                    for (let line = 0; line < lines.length; line++) {
+                        let numbers = lines[line].split(' ')
+                        let t_data = numbers[0]
+                        let n_data = numbers[1]
+
+                        Plotly.extendTraces(PLOT2, {x: [[ap]]}, [ap])
+                    }
+                }
+            }
+        }
+        rawFile.send(null);
+    }
+
+
+</script>
+</body>
+</html>
