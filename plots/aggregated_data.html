@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number of Connections</title>
+</head>
+<body>
+<div id="plot"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+
+<script>
+    PLOT = document.getElementById('plot');
+
+    layout = {
+        title: 'Aggregated data',
+        showlegend: true
+    }
+
+    config = {
+        responsive: true
+    }
+
+    traces = []
+
+    accessPoints = {
+        0: "Computer Lab",
+        1: "Study Zone 1",
+        2: "Study Zone 2",
+        3: "Library",
+        4: "Cafeteria",
+        5: "Average Lecture Halls",
+        6: "Average Tutorial Rooms",
+        7: "Average Offices"
+    }
+
+    for (let i = 0; i < 8; i++) {
+        const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+        let trace = {name: 'AP ' + i, x: [], y: [], marker: {color: "#" + randomColor}}
+        traces.push(trace)
+    }
+
+    Plotly.newPlot(PLOT, traces, layout, config)
+
+    let granularity = 100
+    //
+    let file_path = "../reports/AP2_" + granularity + ".txt"
+    Plotly.restyle(PLOT, {name: accessPoints[0]}, [0])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [0])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+    file_path = "../reports/AP4_" + granularity + ".txt"
+    Plotly.restyle(PLOT, {name: accessPoints[1]}, [1])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [1])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+    file_path = "../reports/AP6_" + granularity + ".txt"
+    Plotly.restyle(PLOT, {name: accessPoints[2]}, [2])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [2])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+    file_path = "../reports/AP9_" + granularity + ".txt"
+    Plotly.restyle(PLOT, {name: accessPoints[3]}, [3])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [3])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+    file_path = "../reports/AP12_" + granularity + ".txt"
+    Plotly.restyle(PLOT, {name: accessPoints[4]}, [4])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [4])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+    file_path = "../reports/average_lecture.txt"
+    Plotly.restyle(PLOT, {name: accessPoints[5]}, [5])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [5])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+    file_path = "../reports/average_tutorial.txt"
+    Plotly.restyle(PLOT, {name: accessPoints[6]}, [6])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [6])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+    file_path = "../reports/average_offices.txt"
+    Plotly.restyle(PLOT, {name: accessPoints[7]}, [7])
+
+    rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file_path, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                let allText = rawFile.responseText;
+                let lines = allText.split('\n');
+                for (let line = 0; line < lines.length; line++) {
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [7])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+    //
+
+</script>
+</body>
+</html>
