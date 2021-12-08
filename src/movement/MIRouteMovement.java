@@ -269,14 +269,19 @@ public class MIRouteMovement extends MapBasedMovement implements
 
             if (probability < 0.0175) {
                 destinationType = LocationType.TUTORIAL;
+                destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
             } else if (probability < 0.035) {
                 destinationType = LocationType.LECTURE_HALL;
+                destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
             } else if (probability < 0.042) {
                 destinationType = LocationType.LIBRARY;
+                destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
             } else if (probability < 0.056) {
                 destinationType = LocationType.COMP_LAB;
+                destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
             } else if (probability < 0.07) {
                 destinationType = LocationType.STUDY_ZONE;
+                destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
             } else {
                 // 0.93 leave or left already
                 // nodes that are at entranceN - already left, remaining leave through different entrances
@@ -293,7 +298,6 @@ public class MIRouteMovement extends MapBasedMovement implements
                 }
             }
 
-            destination = getCoordFromLabel(getRandomLabelOfType(destinationType));
         }
 
         // EXIT around 8pm

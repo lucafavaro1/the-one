@@ -90,7 +90,7 @@ public class EventLogReport extends Report
 			//write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
 
 			if(simTime % granularity == 0)
-				write(simTime + " " + totalHostsConnected);
+				write(simTime + " " + numberConnections[accessPointNumber]);
 			simTime = getSimTime();
 			totalHostsConnected = 0;
 			processEvent(action, host1, host2, message, extra);
