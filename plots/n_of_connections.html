@@ -45,7 +45,9 @@
   }
 
   for (let i = 0; i < 18; i++) {
-    let trace = { name: 'AP ' + i, x: [], y: [] }
+    const randomColor = Math.floor(Math.random()*16777215).toString(16);
+
+    let trace = { name: 'AP ' + i, x: [], y: [] , marker: {color: "#" + randomColor}}
     traces.push(trace)
   }
 
