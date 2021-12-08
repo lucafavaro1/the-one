@@ -88,7 +88,7 @@ public class EventLogReport extends Report
 			totalHostsConnected = Arrays.stream(numberConnections).sum();
 			//write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
 			if(simTime % granularity == 0)
-				write(simTime + " " + String.valueOf(numberConnections[accessPointNumber]));
+				write(simTime + " " + totalHostsConnected);
 			simTime = getSimTime();
 			totalHostsConnected = 0;
 			processEvent(action, host1, host2, message, extra);
