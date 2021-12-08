@@ -66,8 +66,9 @@ public class EventLogReport extends Report
 	private void processEvent(final String action, final DTNHost host1,
 			final DTNHost host2, final Message message, final String extra) {
 		String mod1, mod2;
-		if(getSimTime() == 0.0)
+		if(getSimTime() == 0.0) {
 			Arrays.fill(numberConnections, 0);
+		}
 		if(getSimTime() == simTime) {
 			if (host1.toString().contains("AccessPoint")) {
 				mod1 = host1.toString().substring(12, 14);
@@ -87,6 +88,7 @@ public class EventLogReport extends Report
 		else {
 			totalHostsConnected = Arrays.stream(numberConnections).sum();
 			//write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
+
 			if(simTime % granularity == 0)
 				write(simTime + " " + totalHostsConnected);
 			simTime = getSimTime();
