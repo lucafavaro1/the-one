@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="plot"></div>
+
+<script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+
+<script>
+    layout = {
+        title: 'Total Number of Connections'
+    }
+
+    config = {
+        responsive: true
+    }
+
+    PLOT = document.getElementById('plot');
+    Plotly.newPlot(PLOT, [{x: [], y: []}], layout, config )
+
+    // load file
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", "../reports/sum.txt", false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                var lines = allText.split('\n');
+                for(var line = 0; line < lines.length; line++){
+                    let numbers = lines[line].split(' ')
+                    let t_data = numbers[0]
+                    let n_data = numbers[1]
+
+                    Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [0])
+                }
+            }
+        }
+    }
+    rawFile.send(null);
+</script>
+</body>
+</html>
