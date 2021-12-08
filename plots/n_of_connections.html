@@ -23,6 +23,27 @@
 
   traces = []
 
+  accessPoints = {
+    0: "HS1",
+    1: "Offices",
+    2: "Computer Lab",
+    3: "Offices",
+    4: "Study Zone",
+    5: "Tutorial",
+    6: "Study Zone",
+    7: "Tutorial",
+    8: "Tutorial",
+    9: "Library",
+    10: "Offices",
+    11: "Offices",
+    12: "Cafeteria",
+    13: "Tutorial",
+    14: "HS3",
+    15: "Offices",
+    16: "HS2",
+    17: "Offices"
+  }
+
   for (let i = 0; i < 18; i++) {
     let trace = { name: 'AP ' + i, x: [], y: [] }
     traces.push(trace)
@@ -34,6 +55,7 @@
 
   for (ap = 0; ap < 18; ap++) {
     let file_path =  "../reports/AP" + ap + "_" + granularity + ".txt"
+    Plotly.restyle(PLOT, {name: accessPoints[ap]}, [ap])
 
     rawFile = new XMLHttpRequest();
     rawFile.open("GET", file_path, false);
