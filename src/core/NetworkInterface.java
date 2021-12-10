@@ -141,9 +141,9 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 	 */
 	public void setHost(DTNHost host) {
 		this.host = host;
-		if(this.host.groupId.equals("AccessPoint")){
-			this.transmitRange = this.transmitRange * 3;
-		}
+//		if(this.host.groupId.equals("AccessPoint")){
+//			this.transmitRange = this.transmitRange * 3;
+//		}
 
 		ModuleCommunicationBus comBus = host.getComBus();
 

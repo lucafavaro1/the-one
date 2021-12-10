@@ -176,7 +176,7 @@ GUI.UnderlayImage.rotate = 0
 # Reports
 Report.nrofReports = 1
 Report.report1 = EventLogReport
-#EventLogReport.accessPoint = 10
+EventLogReport.accessPoint = 0
 EventLogReport.granularity = 100
 Report.reportDir = reports
 

@@ -67,6 +67,9 @@ public class DTNHost implements Comparable<DTNHost> {
         for (NetworkInterface i : interf) {
             NetworkInterface ni = i.replicate();
             ni.setHost(this);
+            if(this.groupId.equals("AccessPoint")){
+                ni.transmitRange = ni.transmitRange * 3;
+            }
             net.add(ni);
         }
 

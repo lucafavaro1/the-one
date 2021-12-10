@@ -72,17 +72,21 @@ public class EventLogReport extends Report
 		if(getSimTime() == simTime) {
 			if (host1.toString().contains("AccessPoint")) {
 				mod1 = host1.toString().substring(12, 14);
-				if(extra.equals("up"))
-					numberConnections[Integer.parseInt(mod1)] += 1;
-				else
-					numberConnections[Integer.parseInt(mod1)] -= 1;
+//				if(extra.equals("up"))
+//					numberConnections[Integer.parseInt(mod1)] += 1;
+//				else
+//					numberConnections[Integer.parseInt(mod1)] -= 1;
+
+				numberConnections[Integer.parseInt(mod1)] = host1.getConnections().size();
 			}
 			else if (host2.toString().contains("AccessPoint")) {
 				mod2 = host2.toString().substring(12, 14);
-				if(extra.equals("up"))
-					numberConnections[Integer.parseInt(mod2)] += 1;
-				else
-					numberConnections[Integer.parseInt(mod2)] -= 1;
+//				if(extra.equals("up"))
+//					numberConnections[Integer.parseInt(mod2)] += 1;
+//				else
+//					numberConnections[Integer.parseInt(mod2)] -= 1;
+
+				numberConnections[Integer.parseInt(mod2)] = host2.getConnections().size();
 			}
 		}
 		else {
