@@ -14,6 +14,7 @@
 
   layout = {
     title: 'Number of Connections',
+    height: 1000,
     showlegend: true,
     xaxis: {
       tickmode: "array", // If "array", the placement of the ticks is set via `tickvals` and the tick text is `ticktext`.
@@ -49,10 +50,32 @@
     17: "Offices"
   }
 
-  for (let i = 0; i < 18; i++) {
-    const randomColor = Math.floor(Math.random()*16777215).toString(16);
+  colors = {
+    0: "#E9AFB7",
+    1: "#254A9D",
+    2: "#F35E7A",
+    3: "#437F94",
+    4: "#FF8C0A",
+    5: "#CAFE08",
+    6: "#E9A708",
+    7: "#79EF8B",
+    8: "#3E9916",
+    9: "#A206D3",
+    10: "#52679E",
+    11: "#3969C1",
+    12: "#E42020",
+    13: "#127510",
+    14: "#BD60B9",
+    15: "#63ABBB",
+    16: "#A91568",
+    17: "#A7D5D5"
+  }
 
-    let trace = { name: 'AP ' + i, x: [], y: [] , marker: {color: "#" + randomColor}}
+  for (let i = 0; i < 18; i++) {
+    // const randomColor = Math.floor(Math.random()*16777215).toString(16);
+    //
+    // let trace = { name: 'AP ' + i, x: [], y: [] , marker: {color: "#" + randomColor}}
+    let trace = { name: 'AP ' + i, x: [], y: [] , marker: {color: colors[i]}}
     traces.push(trace)
   }
 
@@ -75,6 +98,7 @@
             let numbers = lines[line].split(' ')
             let t_data = numbers[0]
             let n_data = numbers[1]
+
             Plotly.extendTraces(PLOT, {x: [[t_data]], y: [[n_data]]}, [ap])
           }
         }

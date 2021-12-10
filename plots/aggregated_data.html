@@ -38,10 +38,19 @@
         7: "Average Offices"
     }
 
-    for (let i = 0; i < 8; i++) {
-        const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    colors = {
+        0: "#F35E7A",
+        1: "#FF8C0A",
+        2: "#E9A708",
+        3: "#A206D3",
+        4: "#E42020",
+        5: "#BD60B9",
+        6: "#127510",
+        7: "#63ABBB"
+    }
 
-        let trace = {name: 'AP ' + i, x: [], y: [], marker: {color: "#" + randomColor}}
+    for (let i = 0; i < 8; i++) {
+        let trace = {name: 'AP ' + i, x: [], y: [], marker: {color: colors[i]}}
         traces.push(trace)
     }
 
