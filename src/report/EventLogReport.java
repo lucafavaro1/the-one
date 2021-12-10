@@ -40,8 +40,8 @@ public class EventLogReport extends Report
 
 
 	public int[] numberConnections = new int[18];
-	private int accessPointNumber = 0;
-	private int granularity = 0;
+	private int accessPointNumber = -1;
+	private int granularity = 1;
 	public Double simTime = 0.0;
 	public int totalHostsConnected = 0;
 
@@ -87,17 +87,16 @@ public class EventLogReport extends Report
 		}
 		else {
 			totalHostsConnected = Arrays.stream(numberConnections).sum();
-			//write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
 
-			if(simTime % granularity == 0)
-				write(simTime + " " + numberConnections[accessPointNumber]);
+			if(simTime % granularity == 0) {
+				if(accessPointNumber!= -1)
+					write(simTime + " " + numberConnections[accessPointNumber]);
+				else
+					write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
+			}
 			simTime = getSimTime();
 			totalHostsConnected = 0;
 			processEvent(action, host1, host2, message, extra);
-			//write(getSimTime() + " " + action + " " + (host1 != null ? host1 : "")
-			//		+ (host2 != null ? (" " + host2) : "")
-			//		+ (message != null ? " " + message : "")
-			//		+ (extra != null ? " " + extra : ""));
 		}
 	}
 
