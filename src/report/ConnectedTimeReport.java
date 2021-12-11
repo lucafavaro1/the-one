@@ -39,10 +39,11 @@ public class ConnectedTimeReport extends Report
 
     public HashMap<String,Integer> totalConnectedTime = new HashMap<>();
     public boolean done = false;
+    public int count1 = 0;
 
     public ConnectedTimeReport() {
         super();
-        System.out.println("quante volte qui?");
+
         for(int i=0; i<100; i++)
             totalConnectedTime.put("s"+i,0);
 
@@ -64,7 +65,7 @@ public class ConnectedTimeReport extends Report
      * @param message The message involved in the event (if any, or null)
      * @param extra   Extra info to append in the end of line (if any, or null)
      */
-    private synchronized void processEvent(final String action, final DTNHost host1,
+    private void processEvent(final String action, final DTNHost host1,
                               final DTNHost host2, final Message message, final String extra) {
 
         if (!host1.toString().contains("AccessPoint")) {
@@ -80,6 +81,7 @@ public class ConnectedTimeReport extends Report
                 write(key + " " + totalConnectedTime.get(key));
             done = true;
         }
+
     }
 
 

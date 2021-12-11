@@ -65,7 +65,7 @@ public class EventLogReport extends Report
 	 * @param message The message involved in the event (if any, or null)
 	 * @param extra Extra info to append in the end of line (if any, or null)
 	 */
-	private synchronized void processEvent(final String action, final DTNHost host1,
+	private void processEvent(final String action, final DTNHost host1,
 			final DTNHost host2, final Message message, final String extra) {
 		String mod1, mod2;
 
