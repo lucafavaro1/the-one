@@ -18,11 +18,7 @@ import java.util.List;
  * current simulation time and an array with the number of connected hosts for each AccessPoint
  * and also the sum of the array elements = number of connected nodes at a specific time
  *
- * Report that creates same output as the GUI's event log panel but formatted
- * like {@link input.StandardEventsReader} input. Message relying event has
- * extra one-letter identifier to tell whether that message was delivered to
- * final destination, delivered there again, or just normally relayed
- * (see the public constants).
+ * There are two possible parameters: granularity and accessPoint to select only one element of the array
  */
 public class EventLogReport extends Report
 	implements ConnectionListener, MessageListener {
@@ -37,17 +33,23 @@ public class EventLogReport extends Report
 
 	public static final String SPECIFYACCESSPOINT = "accessPoint";
 	public static final String GRANULARITY = "granularity";
-
-
+	// to compute the max connection per ap report
+	public int[] maxConnections = new int[18];
+	// actual number of connections per ap
 	public int[] numberConnections = new int[18];
+	// number of access point for which we want to extract data
 	private int accessPointNumber = -1;
 	private int granularity = 1;
-	public Double simTime = 0.0;
+	public double simTime = 0.0;
 	public int totalHostsConnected = 0;
 
 	public EventLogReport() {
 		super();
 		Settings settings = getSettings();
+		// fill both arrays with 0 since at the beginning no nodes are connected
+		Arrays.fill(numberConnections,0);
+		Arrays.fill(maxConnections, 0);
+
 		if(settings.contains(SPECIFYACCESSPOINT)) {
 			accessPointNumber = settings.getInt(SPECIFYACCESSPOINT);
 		}
@@ -63,12 +65,10 @@ public class EventLogReport extends Report
 	 * @param message The message involved in the event (if any, or null)
 	 * @param extra Extra info to append in the end of line (if any, or null)
 	 */
-	private void processEvent(final String action, final DTNHost host1,
+	private synchronized void processEvent(final String action, final DTNHost host1,
 			final DTNHost host2, final Message message, final String extra) {
 		String mod1, mod2;
-		if(getSimTime() == 0.0) {
-			Arrays.fill(numberConnections, 0);
-		}
+
 		if(getSimTime() == simTime) {
 			if (host1.toString().contains("AccessPoint")) {
 				mod1 = host1.toString().substring(12, 14);
@@ -88,17 +88,43 @@ public class EventLogReport extends Report
 		else {
 			totalHostsConnected = Arrays.stream(numberConnections).sum();
 
+			// code used only for maxConnections report
+			//for(int i=0; i<18; i++)
+			//	if(numberConnections[i] > maxConnections[i])
+			//		maxConnections[i] = numberConnections[i];
+
+
 			if(simTime % granularity == 0) {
 				if(accessPointNumber!= -1)
+					// APx_granularity.txt
 					write(simTime + " " + numberConnections[accessPointNumber]);
 				else
-					write(simTime + " " + Arrays.toString(numberConnections) + " sum = " + totalHostsConnected);
+					// sum.txt
+					write(simTime + " " + totalHostsConnected);
+					// average_lecture.txt
+					//write(simTime + " " + (numberConnections[0]+numberConnections[14]+numberConnections[16])/3);
+					// average_offices.txt
+					//write(simTime + " " + (numberConnections[1]+numberConnections[3]+numberConnections[10]+numberConnections[11]+numberConnections[15]+numberConnections[17])/6);
+					// average_tutorial.txt
+					//write(simTime + " " + (numberConnections[5]+numberConnections[7]+numberConnections[8]+numberConnections[13])/4);
+					// maxConnections.txt
+					//write(Arrays.toString(maxConnections));
 			}
+
 			simTime = getSimTime();
 			totalHostsConnected = 0;
 			processEvent(action, host1, host2, message, extra);
 		}
+		/*
+		// standard event log
+		write(getSimTime() + " " + action + " " + (host1 != null ? host1 : "")
+				+ (host2 != null ? (" " + host2) : "")
+				+ (message != null ? " " + message : "")
+				+ (extra != null ? " " + extra : ""));
+
+		 */
 	}
+
 
 	public void hostsConnected(DTNHost host1, DTNHost host2) {
 		processEvent(StandardEventsReader.CONNECTION, host1, host2, null,
