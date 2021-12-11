@@ -53,12 +53,12 @@ Group21.routeFile = data/example/combined.wkt
 Group2.groupID = AccessPoint
 Group2.nrofHosts = 1
 Group2.movementModel = StationaryMovement
-Group2.nodeLocation = 1360, 165
+Group2.nodeLocation = 1390, 145
 
 Group3.groupID = AccessPoint
 Group3.nrofHosts = 1
 Group3.movementModel = StationaryMovement
-Group3.nodeLocation = 1045, 55
+Group3.nodeLocation = 1055, 15
 
 # computer lab access point
 Group4.groupID = AccessPoint
@@ -69,7 +69,7 @@ Group4.nodeLocation = 920, 55
 Group5.groupID = AccessPoint
 Group5.nrofHosts = 1
 Group5.movementModel = StationaryMovement
-Group5.nodeLocation = 780, 45
+Group5.nodeLocation = 790, 15
 
 # magistrale 1
 Group6.groupID = AccessPoint
@@ -91,31 +91,31 @@ Group8.nodeLocation = 380, 120
 Group9.groupID = AccessPoint
 Group9.nrofHosts = 1
 Group9.movementModel = StationaryMovement
-Group9.nodeLocation = 280, 45
+Group9.nodeLocation = 280, 25
 
 
 Group10.groupID = AccessPoint
 Group10.nrofHosts = 1
 Group10.movementModel = StationaryMovement
-Group10.nodeLocation = 40, 45
+Group10.nodeLocation = 10, 15
 
 # library access point
 Group11.groupID = AccessPoint
 Group11.nrofHosts = 1
 Group11.movementModel = StationaryMovement
-Group11.nodeLocation = 180, 355
+Group11.nodeLocation = 140, 355
 
 
 Group12.groupID = AccessPoint
 Group12.nrofHosts = 1
 Group12.movementModel = StationaryMovement
-Group12.nodeLocation = 440, 335
+Group12.nodeLocation = 440, 365
 
 
 Group13.groupID = AccessPoint
 Group13.nrofHosts = 1
 Group13.movementModel = StationaryMovement
-Group13.nodeLocation = 660, 335
+Group13.nodeLocation = 660, 365
 
 # cafeteria access point
 Group14.groupID = AccessPoint
@@ -127,10 +127,10 @@ Group14.nodeLocation = 780, 285
 Group15.groupID = AccessPoint
 Group15.nrofHosts = 1
 Group15.movementModel = StationaryMovement
-Group15.nodeLocation = 890, 355
+Group15.nodeLocation = 890, 365
 
 
-# HS2 access point
+# HS3 access point
 Group16.groupID = AccessPoint
 Group16.nrofHosts = 1
 Group16.movementModel = StationaryMovement
@@ -140,19 +140,19 @@ Group16.nodeLocation = 1020, 300
 Group17.groupID = AccessPoint
 Group17.nrofHosts = 1
 Group17.movementModel = StationaryMovement
-Group17.nodeLocation = 1155, 360
+Group17.nodeLocation = 1155, 365
 
-# HS3 access point
+# HS2 access point
 Group18.groupID = AccessPoint
 Group18.nrofHosts = 1
 Group18.movementModel = StationaryMovement
-Group18.nodeLocation = 1260, 300
+Group18.nodeLocation = 1265, 315
 
 
 Group19.groupID = AccessPoint
 Group19.nrofHosts = 1
 Group19.movementModel = StationaryMovement
-Group19.nodeLocation = 1380, 360
+Group19.nodeLocation = 1380, 385
 
 
 ## Map based movement -movement model specific settings
@@ -176,7 +176,7 @@ GUI.UnderlayImage.rotate = 0
 # Reports
 Report.nrofReports = 1
 Report.report1 = EventLogReport
-#EventLogReport.accessPoint = 10
+#EventLogReport.accessPoint = 0
 EventLogReport.granularity = 100
 Report.reportDir = reports
 
