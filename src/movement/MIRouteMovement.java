@@ -433,7 +433,7 @@ public class MIRouteMovement extends MapBasedMovement implements
      */
     public Coord getCoordFromLabel(String label) {
         if (label.equals("study")) {
-            String file = "data/example/openStudy.wkt";
+            String file = "data/MIProject/openStudy.wkt";
             List<MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
             Random rand = new Random();
             int whichPath = rand.nextInt(temp.size() - 1) + 1;  // do not change! It's made to avoid the 0 as return value
@@ -451,80 +451,80 @@ public class MIRouteMovement extends MapBasedMovement implements
 
         fillAllStudyCoords();
 
-        String file = "data/example/cafeteriaN.wkt";
+        String file = "data/MIProject/cafeteriaN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("cafeteria", temp1);
 
-        file = "data/example/HS1_N.wkt";
+        file = "data/MIProject/HS1_N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("HS1", temp1);
 
-        file = "data/example/HS2_N.wkt";
+        file = "data/MIProject/HS2_N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("HS2", temp1);
 
-        file = "data/example/HS3_N.wkt";
+        file = "data/MIProject/HS3_N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("HS3", temp1);
 
-        file = "data/example/tutorial1N.wkt";
+        file = "data/MIProject/tutorial1N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial1", temp1);
 
-        file = "data/example/tutorial2N.wkt";
+        file = "data/MIProject/tutorial2N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial2", temp1);
 
-        file = "data/example/tutorial3N.wkt";
+        file = "data/MIProject/tutorial3N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial3", temp1);
 
-        file = "data/example/tutorial4N.wkt";
+        file = "data/MIProject/tutorial4N.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("tutorial4", temp1);
 
-        file = "data/example/computerlabN.wkt";
+        file = "data/MIProject/computerlabN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("computerlab", temp1);
 
-        file = "data/example/libraryN.wkt";
+        file = "data/MIProject/libraryN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(temp.get(0).getNrofStops() - 1).getLocation();
         matchLabelWithCoord.put("library", temp1);
 
         // ENTRANCES
 
-        file = "data/example/cafeteriaN.wkt";
+        file = "data/MIProject/cafeteriaN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceN", temp1);
 
-        file = "data/example/cafeteriaE.wkt";
+        file = "data/MIProject/cafeteriaE.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceE", temp1);
 
-        file = "data/example/cafeteriaW.wkt";
+        file = "data/MIProject/cafeteriaW.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceW", temp1);
 
-        file = "data/example/cafeteriaS.wkt";
+        file = "data/MIProject/cafeteriaS.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceS", temp1);
 
         // OFFICES
-        file = "data/example/offices_patch.wkt";
+        file = "data/MIProject/offices_patch.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         for (int i = 0; i < 6; i++) {
             temp1 = temp.get(i).getStops().get(0).getLocation();
@@ -534,7 +534,7 @@ public class MIRouteMovement extends MapBasedMovement implements
     }
 
     public void fillAllStudyCoords() {
-        String file = "data/example/openStudy.wkt";
+        String file = "data/MIProject/openStudy.wkt";
         List<MapRoute> temp = MapRoute.readRoutes(file, 1, getMap());
         for (MapRoute mapRoute : temp) {
             for (int j = 0; j < mapRoute.getNrofStops(); j++) {

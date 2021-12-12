@@ -253,28 +253,28 @@ public class POIMovementModel extends MapBasedMovement implements
 
         // ENTRANCES
 
-        String file = "data/example/cafeteriaN.wkt";
+        String file = "data/MIProject/cafeteriaN.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceN", temp1);
 
-        file = "data/example/cafeteriaE.wkt";
+        file = "data/MIProject/cafeteriaE.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceE", temp1);
 
-        file = "data/example/cafeteriaW.wkt";
+        file = "data/MIProject/cafeteriaW.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceW", temp1);
 
-        file = "data/example/cafeteriaS.wkt";
+        file = "data/MIProject/cafeteriaS.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         temp1 = temp.get(0).getStops().get(0).getLocation();
         matchLabelWithCoord.put("entranceS", temp1);
 
         // OFFICES
-        file = "data/example/offices_patch.wkt";
+        file = "data/MIProject/offices_patch.wkt";
         temp = MapRoute.readRoutes(file, 1, getMap());
         for (int i = 0; i < 6; i++) {
             temp1 = temp.get(i).getStops().get(0).getLocation();

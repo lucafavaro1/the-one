@@ -11,7 +11,12 @@
 
 <script>
     layout = {
-        title: 'Total Number of Connections'
+        title: 'Total Number of Connections',
+        xaxis: {
+            tickmode: "array", // If "array", the placement of the ticks is set via `tickvals` and the tick text is `ticktext`.
+            tickvals: [0,3600,7200,10800,14400,18000,21600,25200, 28800, 32400, 36000, 39600, 43200],
+            ticktext: ['8 am', '9 am', '10 am', '11 am', '12 Lunch', '1 pm', '2 pm','3 pm','4 pm','5 pm','6 pm', '7 pm','8 pm Exit']
+        }
     }
 
     config = {

@@ -32,7 +32,7 @@ Group.router = EpidemicRouter
 
 # students
 Group1.groupID = s
-Group1.routeFile = data/example/combined.wkt
+Group1.routeFile = data/MIProject/combined.wkt
 Group1.routeType = 1
 
 # employees
@@ -40,14 +40,14 @@ Group20.groupID = e
 Group20.nrofHosts = 30
 Group20.movementModel = EmployeesMovement
 Group20.routeType = 1
-Group20.routeFile = data/example/combined.wkt
+Group20.routeFile = data/MIProject/combined.wkt
 
 # generic people moving in the hallway/rooms during the whole simulation
 Group21.groupID = o
 Group21.nrofHosts = 10
 Group21.movementModel = POIMovementModel
 Group21.routeType = 1
-Group21.routeFile = data/example/combined.wkt
+Group21.routeFile = data/MIProject/combined.wkt
 
 # HS1 access point
 Group2.groupID = AccessPoint
@@ -159,13 +159,13 @@ Group19.nodeLocation = 1380, 385
 # in case we want to do a map based model
 #MovementModel.warmup = 1000
 MapBasedMovement.nrofMapFiles = 1
-MapBasedMovement.mapFile1 = data/example/combined.wkt
+MapBasedMovement.mapFile1 = data/MIProject/combined.wkt
 
 
 ## GUI settings (adjust the map image on the node movement)
 
 # GUI underlay image settings
-GUI.UnderlayImage.fileName = data/example/map.PNG
+GUI.UnderlayImage.fileName = data/MIProject/map.PNG
 # Image offset in pixels (x, y)
 GUI.UnderlayImage.offset = -50, -210
 # Scaling factor for the image

@@ -72,26 +72,30 @@ public class EventLogReport extends Report
 		if(getSimTime() == simTime) {
 			if (host1.toString().contains("AccessPoint")) {
 				mod1 = host1.toString().substring(12, 14);
-				if(extra.equals("up"))
-					numberConnections[Integer.parseInt(mod1)] += 1;
-				else
-					numberConnections[Integer.parseInt(mod1)] -= 1;
+				numberConnections[Integer.parseInt(mod1)] = host1.getConnections().size();
+
+//				if(extra.equals("up"))
+//					numberConnections[Integer.parseInt(mod1)] += 1;
+//				else
+//					numberConnections[Integer.parseInt(mod1)] -= 1;
 			}
 			else if (host2.toString().contains("AccessPoint")) {
 				mod2 = host2.toString().substring(12, 14);
-				if(extra.equals("up"))
-					numberConnections[Integer.parseInt(mod2)] += 1;
-				else
-					numberConnections[Integer.parseInt(mod2)] -= 1;
+				numberConnections[Integer.parseInt(mod2)] = host2.getConnections().size();
+
+//				if(extra.equals("up"))
+//					numberConnections[Integer.parseInt(mod2)] += 1;
+//				else
+//					numberConnections[Integer.parseInt(mod2)] -= 1;
 			}
 		}
 		else {
 			totalHostsConnected = Arrays.stream(numberConnections).sum();
 
 			// code used only for maxConnections report
-			//for(int i=0; i<18; i++)
-			//	if(numberConnections[i] > maxConnections[i])
-			//		maxConnections[i] = numberConnections[i];
+			for(int i=0; i<18; i++)
+				if(numberConnections[i] > maxConnections[i])
+					maxConnections[i] = numberConnections[i];
 
 
 			if(simTime % granularity == 0) {
@@ -100,7 +104,7 @@ public class EventLogReport extends Report
 					write(simTime + " " + numberConnections[accessPointNumber]);
 				else
 					// sum.txt
-					write(simTime + " " + totalHostsConnected);
+					//write(simTime + " " + totalHostsConnected);
 					// average_lecture.txt
 					//write(simTime + " " + (numberConnections[0]+numberConnections[14]+numberConnections[16])/3);
 					// average_offices.txt
@@ -108,7 +112,7 @@ public class EventLogReport extends Report
 					// average_tutorial.txt
 					//write(simTime + " " + (numberConnections[5]+numberConnections[7]+numberConnections[8]+numberConnections[13])/4);
 					// maxConnections.txt
-					//write(Arrays.toString(maxConnections));
+					write(Arrays.toString(maxConnections));
 			}
 
 			simTime = getSimTime();
