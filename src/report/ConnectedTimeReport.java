@@ -37,22 +37,30 @@ public class ConnectedTimeReport extends Report
      */
     public static final String MESSAGE_TRANS_DELIVERED_AGAIN = "A";
 
-    public HashMap<String,Integer> totalConnectedTime = new HashMap<>();
+    public HashMap<String, Double> totalConnectedTime = new HashMap<>();
+    public HashMap<String, Double> startTime = new HashMap<>();
+
     public boolean done = false;
+    double average = 0.0;
     public int count1 = 0;
 
     public ConnectedTimeReport() {
         super();
 
-        for(int i=0; i<100; i++)
-            totalConnectedTime.put("s"+i,0);
+        for (int i = 0; i < 100; i++) {
+            totalConnectedTime.put("s" + i, 0.0);
+            startTime.put("s" + i, 0.0);
+        }
 
-        for(int i=118; i<148; i++)
-            totalConnectedTime.put("e"+i,0);
+        for (int i = 118; i < 148; i++) {
+            totalConnectedTime.put("e" + i, 0.0);
+            startTime.put("e" + i, 0.0);
+        }
 
-        for(int i=148; i<158; i++)
-            totalConnectedTime.put("o"+i,0);
-
+        for (int i = 148; i < 158; i++) {
+            totalConnectedTime.put("o" + i, 0.0);
+            startTime.put("o" + i, 0.0);
+        }
     }
 
 
@@ -70,17 +78,41 @@ public class ConnectedTimeReport extends Report
 
         if (!host1.toString().contains("AccessPoint")) {
             if (extra.equals("up"))
-                totalConnectedTime.put(host1.toString(), totalConnectedTime.get(host1.toString())+1);
+                startTime.put(host1.toString(), getSimTime());
+            else {
+                if((getSimTime() - startTime.get(host1.toString())) == 0)
+                    totalConnectedTime.replace(host1.toString(), totalConnectedTime.get(host1.toString()) + 1);
+                else
+                    totalConnectedTime.replace(host1.toString(), totalConnectedTime.get(host1.toString()) + (getSimTime() - startTime.get(host1.toString())));
+            }
         } else if (!host2.toString().contains("AccessPoint")) {
             if (extra.equals("up"))
-                totalConnectedTime.put(host2.toString(), totalConnectedTime.get(host2.toString())+1);
+                startTime.put(host2.toString(), getSimTime());
+            else {
+                if((getSimTime() - startTime.get(host2.toString())) == 0)
+                    totalConnectedTime.replace(host2.toString(), totalConnectedTime.get(host2.toString()) + 1);
+                else
+                    totalConnectedTime.replace(host2.toString(), totalConnectedTime.get(host2.toString()) + (getSimTime() - startTime.get(host2.toString())));
+            }
         }
 
         if(getSimTime()>43200 && !done) {
-            for (String key : totalConnectedTime.keySet())
+            for (String key : totalConnectedTime.keySet()) {
                 write(key + " " + totalConnectedTime.get(key));
+                average += totalConnectedTime.get(key);
+            }
             done = true;
+            // 140 is the total number of nodes: 100 students + 30 employees + 10 others
+            write("AVG " + (int) average/140);
         }
+
+        /*
+        write(getSimTime() + " " + action + " " + (host1 != null ? host1 : "")
+                + (host2 != null ? (" " + host2) : "")
+                + (message != null ? " " + message : "")
+                + (extra != null ? " " + extra : ""));
+
+         */
 
     }
 

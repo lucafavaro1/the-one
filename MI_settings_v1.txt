@@ -1,0 +1,237 @@
+#Settings of our personal scenario
+
+Scenario.name = MI_Wifi_Scenario
+Scenario.endTime = 50000
+#43200s == 12h (from 8am to 8pm) + remaining time to show that nodes ends their current activity and move toward
+Scenario.updateInterval = 1
+Scenario.simulateConnections = true
+MovementModel.worldSize = 3000,3000
+Events.nrof = 0
+
+# Communication Interface for nodes
+nodesInterface.type = HubInterface
+nodesInterface.hubGroups = AccessPoint
+nodesInterface.transmitRange = 20
+nodesInterface.transmitSpeed = 10M
+
+
+# Common settings for all groups
+#Group.bufferSize = 5M
+Group.waitTime = 0, 100
+
+# Walking speeds
+Group.speed = 0.9, 1.1
+
+# Groups
+Scenario.nrofHostGroups = 32
+Group.nrofHosts = 100
+Group.nrofInterfaces = 1
+Group.interface1 = nodesInterface
+Group.movementModel = MIRouteMovement
+Group.router = EpidemicRouter
+
+# students
+Group1.groupID = s
+Group1.routeFile = data/MIProject/combined.wkt
+Group1.routeType = 1
+
+# employees
+Group20.groupID = e
+Group20.nrofHosts = 30
+Group20.movementModel = EmployeesMovement
+Group20.routeType = 1
+Group20.routeFile = data/MIProject/combined.wkt
+
+# generic people moving in the hallway/rooms during the whole simulation
+Group21.groupID = o
+Group21.nrofHosts = 10
+Group21.movementModel = POIMovementModel
+Group21.routeType = 1
+Group21.routeFile = data/MIProject/combined.wkt
+
+# HS1 access point
+Group2.groupID = AccessPoint
+Group2.nrofHosts = 1
+Group2.movementModel = StationaryMovement
+Group2.nodeLocation = 1390, 145
+
+Group3.groupID = AccessPoint
+Group3.nrofHosts = 1
+Group3.movementModel = StationaryMovement
+Group3.nodeLocation = 1055, 15
+
+# computer lab access point
+Group4.groupID = AccessPoint
+Group4.nrofHosts = 1
+Group4.movementModel = StationaryMovement
+Group4.nodeLocation = 920, 55
+
+Group5.groupID = AccessPoint
+Group5.nrofHosts = 1
+Group5.movementModel = StationaryMovement
+Group5.nodeLocation = 790, 15
+
+# magistrale 1
+Group6.groupID = AccessPoint
+Group6.nrofHosts = 1
+Group6.movementModel = StationaryMovement
+Group6.nodeLocation = 670, 120
+
+Group7.groupID = AccessPoint
+Group7.nrofHosts = 1
+Group7.movementModel = StationaryMovement
+Group7.nodeLocation = 540, 45
+
+# magistrale 2
+Group8.groupID = AccessPoint
+Group8.nrofHosts = 1
+Group8.movementModel = StationaryMovement
+Group8.nodeLocation = 380, 120
+
+Group9.groupID = AccessPoint
+Group9.nrofHosts = 1
+Group9.movementModel = StationaryMovement
+Group9.nodeLocation = 280, 25
+
+
+Group10.groupID = AccessPoint
+Group10.nrofHosts = 1
+Group10.movementModel = StationaryMovement
+Group10.nodeLocation = 10, 15
+
+# library access point
+Group11.groupID = AccessPoint
+Group11.nrofHosts = 1
+Group11.movementModel = StationaryMovement
+Group11.nodeLocation = 140, 355
+
+
+Group12.groupID = AccessPoint
+Group12.nrofHosts = 1
+Group12.movementModel = StationaryMovement
+Group12.nodeLocation = 440, 365
+
+
+Group13.groupID = AccessPoint
+Group13.nrofHosts = 1
+Group13.movementModel = StationaryMovement
+Group13.nodeLocation = 660, 365
+
+# cafeteria access point
+Group14.groupID = AccessPoint
+Group14.nrofHosts = 1
+Group14.movementModel = StationaryMovement
+Group14.nodeLocation = 780, 285
+
+
+Group15.groupID = AccessPoint
+Group15.nrofHosts = 1
+Group15.movementModel = StationaryMovement
+Group15.nodeLocation = 890, 365
+
+
+# HS3 access point
+Group16.groupID = AccessPoint
+Group16.nrofHosts = 1
+Group16.movementModel = StationaryMovement
+Group16.nodeLocation = 1020, 300
+
+
+Group17.groupID = AccessPoint
+Group17.nrofHosts = 1
+Group17.movementModel = StationaryMovement
+Group17.nodeLocation = 1155, 365
+
+# HS2 access point
+Group18.groupID = AccessPoint
+Group18.nrofHosts = 1
+Group18.movementModel = StationaryMovement
+Group18.nodeLocation = 1265, 315
+
+
+Group19.groupID = AccessPoint
+Group19.nrofHosts = 1
+Group19.movementModel = StationaryMovement
+Group19.nodeLocation = 1380, 385
+
+Group22.groupID = AccessPoint
+Group22.nrofHosts = 1
+Group22.movementModel = StationaryMovement
+Group22.nodeLocation = 1225, 175
+
+Group23.groupID = AccessPoint
+Group23.nrofHosts = 1
+Group23.movementModel = StationaryMovement
+Group23.nodeLocation = 1385, 265
+
+Group24.groupID = AccessPoint
+Group24.nrofHosts = 1
+Group24.movementModel = StationaryMovement
+Group24.nodeLocation = 1075, 175
+
+Group25.groupID = AccessPoint
+Group25.nrofHosts = 1
+Group25.movementModel = StationaryMovement
+Group25.nodeLocation = 925, 200
+
+Group26.groupID = AccessPoint
+Group26.nrofHosts = 1
+Group26.movementModel = StationaryMovement
+Group26.nodeLocation = 800, 155
+
+Group27.groupID = AccessPoint
+Group27.nrofHosts = 1
+Group27.movementModel = StationaryMovement
+Group27.nodeLocation = 660, 242
+
+Group28.groupID = AccessPoint
+Group28.nrofHosts = 1
+Group28.movementModel = StationaryMovement
+Group28.nodeLocation = 535, 175
+
+Group29.groupID = AccessPoint
+Group29.nrofHosts = 1
+Group29.movementModel = StationaryMovement
+Group29.nodeLocation = 430, 240
+
+Group30.groupID = AccessPoint
+Group30.nrofHosts = 1
+Group30.movementModel = StationaryMovement
+Group30.nodeLocation = 260, 145
+
+Group31.groupID = AccessPoint
+Group31.nrofHosts = 1
+Group31.movementModel = StationaryMovement
+Group31.nodeLocation = 225, 262
+
+Group32.groupID = AccessPoint
+Group32.nrofHosts = 1
+Group32.movementModel = StationaryMovement
+Group32.nodeLocation = 100, 125
+
+
+## Map based movement -movement model specific settings
+# in case we want to do a map based model
+#MovementModel.warmup = 1000
+MapBasedMovement.nrofMapFiles = 1
+MapBasedMovement.mapFile1 = data/MIProject/combined.wkt
+
+
+## GUI settings (adjust the map image on the node movement)
+
+# GUI underlay image settings
+GUI.UnderlayImage.fileName = data/MIProject/map.PNG
+# Image offset in pixels (x, y)
+GUI.UnderlayImage.offset = -50, -210
+# Scaling factor for the image
+GUI.UnderlayImage.scale = 0.98
+# Image rotation (radians)
+GUI.UnderlayImage.rotate = 0
+
+# Reports
+Report.nrofReports = 1
+Report.report1 = ConnectedTimeReport
+EventLogReport.accessPoint = -1
+EventLogReport.granularity = 100
+Report.reportDir = reports
+
